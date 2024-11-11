@@ -2,20 +2,21 @@
 PImage img;    // <-- this is a 'bucket' into which we can put image data
  
 void setup() {
-  size(640, 480);
-  img = loadImage("first.png"); // <-- use the loadImage() method to put data from the 'Holiday.png' file into our PImage 
-        
-  // < draw the image stored in img at position 0,0 on the canvas
-  tint(185, 230, 255);
-image(img, 0, 0);
+  size(640, 530);
+  img = loadImage("car.jpg"); // <-- use the loadImage() method to put data from the 'Holiday.png' file into our PImage 
+
 }
 void draw() {
-  if (mousePressed) {
-    line(pmouseX, pmouseY, mouseX,mouseY);
-  }
+
+   int tint_value = round(mouseX*255 / width);
+  background(255);
+ 
+  tint(tint_value);
+  image(img, 0, 0,640,480);
+ 
+  textSize(16);
+  fill(0);
+  text("tint(" + tint_value + ");", 200, 500);
+  text("image(img, 0, 0);", 200, 520);
 }
  
-void keyPressed () {
-  save("myImage.jpg");   // -- Save an image of the current canvas
-                          // -- to the sketch folder in a file called myImage.jpg ...
-}
