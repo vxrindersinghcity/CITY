@@ -12,7 +12,9 @@ void draw() {
   background(255);
  
   tint(tint_value);
-  image(img, 0, 0,640,480);
+  image(img, 0, 0,mouseX,mouseY);
+  filter(INVERT);
+  filter(BLUR,1.4);
  
   textSize(16);
   fill(0);

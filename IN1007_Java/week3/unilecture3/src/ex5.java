@@ -6,7 +6,7 @@ public class ex5 {
         System.out.println("enter how many numbers you want to enter: ");
         int n = sc.nextInt();
 
-        int[] numbers= new int[n];
+        double[] numbers= new double[n];
         for (int i = 0; i < n; i++) {
             numbers[i]=sc.nextInt();
         }
@@ -20,11 +20,19 @@ public class ex5 {
 
     }
 
-    private static double arithmetic(int a, int b) {
-        return (a+b)/2;
+    private static double arithmetic(double numbers[]) {
+        double sum=0;
+        for (int i = 0; i < numbers.length; i++) {
+            sum+=numbers[i];
+        }
+        return (sum)/numbers.length;
     }
 
-    private static double geometric(int a, int b) {
-        return Math.sqrt(a*b);
+    private static double geometric(double numbers[]) {
+        double sum=0;
+        for (int i = 0; i < numbers.length; i++) {
+            sum*=numbers[i];
+        }
+        return Math.sqrt(sum);
     }
 }
