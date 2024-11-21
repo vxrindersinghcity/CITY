@@ -1,7 +1,7 @@
 public class ExpeditionMember {
     private String name;
     private int studentID;
-    static int member_counter=0;
+    public static int member_counter=0;
 
     public ExpeditionMember(String name, int studentID) {
         this.name = name;
