@@ -18,8 +18,27 @@ void setup() {
  
 }
 void draw() {
-  loop();
   if(countSlide==0){
+  draw1();
+  for (Transaction x : transactions) {
+    if (x.isMouseOver()) {
+      x.displayDetails();
+    }
+  }
+  }
+  if(countSlide==1){
+   background(255);
+  }
+}
+void keyPressed() {
+  if(key=='d' || key=='D'){
+    countSlide++;
+  }if(key=='a' || key=='A'){
+    countSlide--;
+  }
+  print(countSlide);
+}
+void draw1(){
     background(255);
    int cols = 7; // 7 days a week
   int rows = (int)(transactions.length % float(cols));
@@ -33,20 +52,4 @@ void draw() {
     float y = (row + 1) * ySpacing;
     transactions[i].display(x, y);
   }
-  for (Transaction x : transactions) {
-    if (x.isMouseOver()) {
-      x.displayDetails();
-    }
-  }
-  }
-  if(countSlide==1){
-   background(255);
-  }
-}
-void keyPressed() {
-  if(key=='d' || key=='D'){
-    countSlide=1;
-  }
-  if()
-
 }
