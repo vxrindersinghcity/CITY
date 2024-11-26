@@ -1,7 +1,8 @@
 Transaction[] transactions;
+int countSlide;
 
 void setup() {
-  size(800, 800);
+  size(800, 700);
   String[] lines = loadStrings("myData.txt");
   transactions = new Transaction[lines.length];
 
@@ -17,7 +18,9 @@ void setup() {
  
 }
 void draw() {
-  background(255);
+  loop();
+  if(countSlide==0){
+    background(255);
    int cols = 7; // 7 days a week
   int rows = (int)(transactions.length % float(cols));
   float xSpacing = width / 8;
@@ -35,4 +38,15 @@ void draw() {
       x.displayDetails();
     }
   }
+  }
+  if(countSlide==1){
+   background(255);
+  }
+}
+void keyPressed() {
+  if(key=='d' || key=='D'){
+    countSlide=1;
+  }
+  if()
+
 }

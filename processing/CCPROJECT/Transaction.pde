@@ -20,9 +20,9 @@ class Transaction {
     this.x=x;
     this.y=y;
     if (amount>100) {
-      size = map(amount, 0, -150, 10, 30);
+      size = map(amount, 0, 220, 10, 30);
     } else {
-      size = map(amount, -10, 50, 10, 50); // Map amount to circle size
+      size = map(amount*-1, -10, 50, 10, 50); // Map amount to circle size
     }
     float green = map(amount, 0, 700, 0, 255);
     float red = 255 - green;
@@ -35,11 +35,11 @@ class Transaction {
   }
   boolean isMouseOver() {
     float d = dist(mouseX, mouseY, x, y);
-    return d < size;
+    return d < size/1.5;
   }
   void displayDetails() {
     fill(0);
     textAlign(CENTER);
-    text("Day: " + day + "\nDescription: " + description + "\nAmount: " + amount + "\nBalance: " + balance, x, y - size / 2 - 20);
+    text("Day: " + day + "\nDescription: " + description + "\nAmount: " + amount + "\nBalance: " + balance, width/1.4, height/1.15 );
   }
 }
