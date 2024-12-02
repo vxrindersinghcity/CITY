@@ -16,12 +16,14 @@ public class Main {
 
         ResearchExpedition pyramidExpedition = new ResearchExpedition(members[0], members[1], members[2]);
         ResearchExpedition nileExpedition= new ResearchExpedition(members[members.length-1], members[members.length-2], members[members.length-3]);
-        System.out.println("Leader: "+pyramidExpedition.getExpeditionLeaderName()+
-                " Archivist: "+pyramidExpedition.getArchivistName()+
-                " Researcher: "+pyramidExpedition.getFieldResearcherName());
-        System.out.println("Leader: "+nileExpedition.getExpeditionLeaderName()+
-                " Archivist: "+nileExpedition.getArchivistName()+
-                " Researcher: "+nileExpedition.getFieldResearcherName());
+
+        System.out.println("PYRAMID EXPIDITION "+"\nLeader: "+pyramidExpedition.getExpeditionLeaderName()+
+                "\nArchivist: "+pyramidExpedition.getArchivistName()+
+                "\nResearcher: "+pyramidExpedition.getFieldResearcherName());
+
+        System.out.println("NILE EXPIDITION "+"\nLeader: "+nileExpedition.getExpeditionLeaderName()+
+                "\nArchivist: "+nileExpedition.getArchivistName()+
+                "\nResearcher: "+nileExpedition.getFieldResearcherName());
 
         if (members.length==ExpeditionMember.member_counter){
             System.out.println("SUCCESS");
