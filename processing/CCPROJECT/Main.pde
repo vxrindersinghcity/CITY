@@ -33,7 +33,7 @@ void draw() {
 void keyPressed() {
   if(key=='d' || key=='D'){
     countSlide++;
-  }if(key=='a' || key=='A'){
+  }if((key=='a' || key=='A') && countSlide>0){
     countSlide--;
   }
   print(countSlide);
