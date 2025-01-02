@@ -8,12 +8,6 @@ Student ID: 240003978
 Student email: Varinder.Singh@city.ac.uk             
 */
 
-
-DROP DATABASE IF EXISTS mydb;
-CREATE DATABASE mydb;
-USE mydb;
-DROP TABLE IF EXISTS USER, LAPTOP, RENTAL_TRANSACTION, REPORT, MaintenanceLog;
-
 /* SECTION 1 - CREATE TABLE STATEMENTS */
 
 CREATE TABLE USER (
@@ -152,47 +146,74 @@ INSERT INTO MaintenanceLog (laptopID, serviceDate, serviceDescription, technicai
 
 */
 
+
 /* SECTION 4 - SELECT STATEMENTS - The queries must be explained in natural (English) language first, and then followed up by respective SELECTs*/
+
 
 /* 
 1)  
 
 */
+select '1)' AS '';
+
+
 
 /* 
 2)  
 
 */
+select '2)' AS '';
+
+
+
 
 /* 
 3)  
 
 */
+select '3)' AS '';
+
+
 
 /* 
 4)  
 
 */
+select '4)' AS '';
+
+
+
 
 /* 
 5)  
 
 */
+select '5)' AS '';
+
+
 
 /* 
 6)  
 
 */
+select '6)' AS '';
+
 
 /* 
 7)  
 
 */
+select '7)' AS '';
+
+
 
 /* 
 8)  
 
 */
+select '8)' AS '';
+
+
 
 /* SECTION 5 - DELETE ROWS - The queries must be explained in natural (English) language first, and then followed up by respective statements */
 
@@ -206,4 +227,9 @@ INSERT INTO MaintenanceLog (laptopID, serviceDate, serviceDescription, technicai
 
 */
 
+
 /* SECTION 6 - DROP TABLES */
+
+
+
+SHOW TABLES;
