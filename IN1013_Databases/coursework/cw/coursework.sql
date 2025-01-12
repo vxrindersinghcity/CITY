@@ -38,7 +38,7 @@ CREATE TABLE REPORT (
     userID int NOT NULL,
     laptopID int NOT NULL,
     reportDate int NOT NULL,
-    reportDescription varchar(255) NOT NULL,
+    reportDescription varchar(100) NOT NULL,
     fine int,
     FOREIGN KEY (userID) REFERENCES USER(userID),
     FOREIGN KEY (laptopID) REFERENCES LAPTOP(laptopID)
@@ -55,19 +55,19 @@ CREATE TABLE MaintenanceLog (
 
 /* SECTION 2 - INSERT STATEMENTS */
 
-INSERT INTO USER (userID, first_name, last_name, numberOfrentals) VALUES
-(1, 'Varinder', 'Singh', 2),
-(2, 'Jamie', 'Smith', 1),
-(3, 'Alice', 'Johnson', 1),
-(4, 'Bob', 'Crow', 3),
-(5, 'Charlie', 'Miles', 4),
-(6, 'David', 'Wonder', 2),
-(7, 'Eva', 'Davis', 1),
-(8, 'Frank', 'Garcia', 2),
-(9, 'Grace', 'Martinez', 0),
-(10, 'Hank', 'Martinez', 3),
-(11, 'Sam', 'Frank', 0),
-(12, 'Henry', 'Rose', 1);
+INSERT INTO USER (userID, first_name, last_name) VALUES
+(1, 'Varinder', 'Singh'),
+(2, 'Jamie', 'Smith'),
+(3, 'Alice', 'Johnson'),
+(4, 'Bob', 'Crow'),
+(5, 'Charlie', 'Miles'),
+(6, 'David', 'Wonder'),
+(7, 'Eva', 'Davis'),
+(8, 'Frank', 'Garcia'),
+(9, 'Grace', 'Martinez'),
+(10, 'Hank', 'Martinez'),
+(11, 'Sam', 'Frank'),
+(12, 'Henry', 'Rose');
 
 INSERT INTO LAPTOP (model, LAPTOP_status) VALUES
 ('Dell Inspire 15', 'Available'),
@@ -122,24 +122,29 @@ INSERT INTO REPORT (userID, laptopID, reportDate, reportDescription, fine) VALUE
 (11, 11, 230208, 'LOST', 1000);        
 
 INSERT INTO MaintenanceLog (laptopID, serviceDate, serviceDescription, technicainEmail) VALUES
-(2, 230111, 'Screen replacement', 'john.doe@city.it.uk'),
-(4, 230316, 'Battery replacement', 'jane.smith@city.it.uk'),  
-(7, 230114, 'Keyboard replacement', 'michael.johnson@city.it.uk'),  
-(3, 230111, 'Touchpad repair', 'emily.davis@city.it.uk'),     
-(1, 230126, 'Software reinstall', 'john.doe@city.it.uk'),     
-(6, 240221, 'Cooling system check', 'jane.smith@city.it.uk'),   
-(8, 240408, 'Performance optimization', 'michael.johnson@city.it.uk'),   
-(9, 230128, 'WiFi adapter replacement', 'emily.davis@city.it.uk'),  
-(5, 230128, 'Speaker replacement', 'john.doe@city.it.uk');    
+(2, 230111, 'Screen replacement', 'jaime.sith@city.it.uk'),
+(4, 230316, 'Battery replacement', 'arun.dsouza@city.it.uk'),  
+(7, 230114, 'Keyboard replacement', 'michael.cole@city.it.uk'),  
+(3, 230111, 'Touchpad repair', 'emily.wattson@city.it.uk'),     
+(1, 230126, 'Software reinstall', 'arun.dsouza@city.it.uk'),     
+(6, 240221, 'Cooling system check','michael.cole@city.it.uk' ),   
+(8, 240408, 'Performance optimization','michael.cole@city.it.uk' ),   
+(9, 230128, 'WiFi adapter replacement', 'jaime.sith@city.it.uk'),  
+(5, 230128, 'Speaker replacement', 'emily.wattson@city.it.uk');    
 
 
 
 /* SECTION 3 - UPDATE STATEMENTS - The queries must be explained in natural (English) language first, and then followed up by respective statements */
 
-/*
-1)
-
-*/
+/* 
+1) Update the number of rentals for a user based on the count of their rental transactions 
+*/ 
+UPDATE USER u
+SET numberOfrentals = (
+    SELECT COUNT(*)
+    FROM RENTAL_TRANSACTION r
+    WHERE u.userID = r.userID
+);
 
 /*
 2)
@@ -147,14 +152,19 @@ INSERT INTO MaintenanceLog (laptopID, serviceDate, serviceDescription, technicai
 */
 
 
+
 /* SECTION 4 - SELECT STATEMENTS - The queries must be explained in natural (English) language first, and then followed up by respective SELECTs*/
 
 
 /* 
-1)  
+1) SELECTS all the informaiton that is in the user table
 
 */
-select '1)' AS '';
+SELECT '1)' AS prefix, '' AS userID, '' AS first_name, '' AS last_name, '' AS numberOfrentals
+UNION ALL
+SELECT '' AS prefix, userID, first_name, last_name, numberOfrentals
+FROM USER;
+
 
 
 
