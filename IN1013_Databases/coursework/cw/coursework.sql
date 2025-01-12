@@ -1,11 +1,7 @@
-DROP DATABASE IF EXISTS mydb;
-CREATE DATABASE mydb;
-USE mydb;
-DROP TABLE IF EXISTS USER, LAPTOP, RENTAL_TRANSACTION, REPORT, MaintenanceLog;
+
 /*
 Student name: VARINDER SINGH               
-Student ID: 240003978
-Student email: Varinder.Singh@city.ac.uk             
+Student ID: 240003978         
 */
 
 /* SECTION 1 - CREATE TABLE STATEMENTS */
@@ -55,19 +51,19 @@ CREATE TABLE MaintenanceLog (
 
 /* SECTION 2 - INSERT STATEMENTS */
 
-INSERT INTO USER (userID, first_name, last_name) VALUES
-(1, 'Varinder', 'Singh'),
-(2, 'Jamie', 'Smith'),
-(3, 'Alice', 'Johnson'),
-(4, 'Bob', 'Crow'),
-(5, 'Charlie', 'Miles'),
-(6, 'David', 'Wonder'),
-(7, 'Eva', 'Davis'),
-(8, 'Frank', 'Garcia'),
-(9, 'Grace', 'Martinez'),
-(10, 'Hank', 'Martinez'),
-(11, 'Sam', 'Frank'),
-(12, 'Henry', 'Rose');
+INSERT INTO USER VALUES
+(1, 'Varinder', 'Singh', NULL), 
+(2, 'Jamie', 'Smith', 1), 
+(3, 'Alice', 'Johnson', 1),
+(4, 'Bob', 'Crow', 3), 
+(5, 'Charlie', 'Miles', 4),
+(6, 'David', 'Wonder', 2), 
+(7, 'Eva', 'Davis', 1), 
+(8, 'Frank', 'Garcia', 2), 
+(9, 'Grace', 'Martinez', 0), 
+(10, 'Hank', 'Martinez', 3), 
+(11, 'Sam', 'Frank', 0), 
+(12, 'Henry', 'Rose', 1);
 
 INSERT INTO LAPTOP (model, LAPTOP_status) VALUES
 ('Dell Inspire 15', 'Available'),
@@ -113,7 +109,7 @@ INSERT INTO REPORT (userID, laptopID, reportDate, reportDescription, fine) VALUE
 (2, 4, 230316, 'Battery problem', 30), 
 (3, 11, 230114, 'Keyboard issue', 40),   
 (4, 15, 230111, 'Touchpad not working', 20),  
-(5, 9, 230126, 'Software crash', 0),     
+(5, 9, 230126, 'Software crash', NULL),     
 (6, 12, 240221, 'Overheating', 0),        
 (7, 13, 240318, 'Slow performance', 45),  
 (8, 14, 240408, 'WiFi issue', 15),        
@@ -129,7 +125,8 @@ INSERT INTO MaintenanceLog (laptopID, serviceDate, serviceDescription, technicai
 (1, 230126, 'Software reinstall', 'arun.dsouza@city.it.uk'),     
 (6, 240221, 'Cooling system check','michael.cole@city.it.uk' ),   
 (8, 240408, 'Performance optimization','michael.cole@city.it.uk' ),   
-(9, 230128, 'WiFi adapter replacement', 'jaime.sith@city.it.uk'),  
+(9, 230128, 'WiFi adapter replacement', 'jaime.sith@city.it.uk'), 
+(4, 220123, 'Liquid removal', 'jackline.smath@city.ac.uk') ,
 (5, 230128, 'Speaker replacement', 'emily.wattson@city.it.uk');    
 
 
@@ -139,107 +136,118 @@ INSERT INTO MaintenanceLog (laptopID, serviceDate, serviceDescription, technicai
 /* 
 1) Update the number of rentals for a user based on the count of their rental transactions 
 */ 
-UPDATE USER u
-SET numberOfrentals = (
-    SELECT COUNT(*)
-    FROM RENTAL_TRANSACTION r
-    WHERE u.userID = r.userID
-);
+UPDATE USER SET numberOfrentals = (SELECT COUNT(*) FROM RENTAL_TRANSACTION WHERE USER.userID = RENTAL_TRANSACTION.userID) WHERE userID = 1;
 
 /*
-2)
-
+2) Updates the status to rented for the laptop in laptop table depending on rental transaction table if the return value is null which means laptop is still rented
 */
-
+UPDATE LAPTOP 
+SET LAPTOP_status = 'Rented' 
+WHERE laptopID IN 
+(SELECT laptopID FROM RENTAL_TRANSACTION WHERE returnDate IS NULL);
 
 
 /* SECTION 4 - SELECT STATEMENTS - The queries must be explained in natural (English) language first, and then followed up by respective SELECTs*/
 
 
 /* 
-1) SELECTS all the informaiton that is in the user table
-
+1) Showas all users that have a surname starting with s
 */
-SELECT '1)' AS prefix, '' AS userID, '' AS first_name, '' AS last_name, '' AS numberOfrentals
-UNION ALL
-SELECT '' AS prefix, userID, first_name, last_name, numberOfrentals
-FROM USER;
-
-
+select '1)' AS '';
+SELECT userID, first_name, last_name FROM USER WHERE last_name LIKE 'S%';
 
 
 /* 
-2)  
-
+2)  finds the total fine the user has got from largest to smallest
 */
 select '2)' AS '';
+SELECT u.userID, u.first_name, u.last_name, SUM(r.fine) AS total_fine
+FROM USER u
+JOIN REPORT r ON u.userID = r.userID
+GROUP BY u.userID, u.first_name, u.last_name ORDER BY total_fine DESC;
 
 
 
 
 /* 
-3)  
-
+3) Finds all rental transactions with user and laptop details
 */
 select '3)' AS '';
+SELECT r.transactionID, u.first_name, u.last_name, l.model, r.rentalDate, r.returnDate
+FROM RENTAL_TRANSACTION r
+JOIN USER u ON r.userID = u.userID
+JOIN LAPTOP l ON r.laptopID = l.laptopID;
 
 
 
 /* 
-4)  
-
+4)  List all users who have not rented any laptops
 */
 select '4)' AS '';
-
+SELECT u.userID, u.first_name, u.last_name 
+FROM USER u WHERE NOT EXISTS ( SELECT 1 FROM RENTAL_TRANSACTION rt WHERE u.userID = rt.userID);
 
 
 
 /* 
-5)  
-
+5)  Find users who have rented laptops and also reported issues
 */
 select '5)' AS '';
-
+SELECT DISTINCT u.userID, u.first_name, u.last_name 
+FROM USER u 
+JOIN RENTAL_TRANSACTION rt ON u.userID = rt.userID
+JOIN REPORT r ON u.userID =r.userID;
 
 
 /* 
-6)  
-
+6)  List all laptops that have never been reported with any issues
 */
 select '6)' AS '';
-
+SELECT l.laptopID, l.model 
+FROM LAPTOP l 
+LEFT JOIN REPORT r ON l.laptopID = r.laptopID 
+WHERE r.laptopID IS NULL;
 
 /* 
-7)  
-
+7)  Count the total number of rentals per user and display users who have rented more than twice
 */
 select '7)' AS '';
-
+SELECT u.userID, u.first_name, u.last_name, COUNT(rt.transactionID) AS rental_count
+ FROM USER u 
+ JOIN RENTAL_TRANSACTION rt ON u.userID = rt.userID 
+ GROUP BY u.userID, u.first_name, u.last_name HAVING rental_count > 2;
 
 
 /* 
-8)  
-
+8)  Show the total number of laptops that are currently rented and available
 */
 select '8)' AS '';
-
+SELECT LAPTOP_status, COUNT(*) AS total_laptops FROM LAPTOP GROUP BY LAPTOP_status;
 
 
 /* SECTION 5 - DELETE ROWS - The queries must be explained in natural (English) language first, and then followed up by respective statements */
 
 /*
-1)
-
+1) Deletes all laptops that are damaged
 */
+DELETE FROM LAPTOP
+WHERE LAPTOP_status = 'Damaged';
+
 
 /*
-2)
-
+2) Deletes all reports with a fine of NULL
 */
+DELETE FROM REPORT
+WHERE fine IS NULL;
+
 
 
 /* SECTION 6 - DROP TABLES */
-
+DROP TABLE IF EXISTS MaintenanceLog;
+DROP TABLE IF EXISTS REPORT;
+DROP TABLE IF EXISTS RENTAL_TRANSACTION;
+DROP TABLE IF EXISTS LAPTOP;
+DROP TABLE IF EXISTS USER;
 
 
 SHOW TABLES;
