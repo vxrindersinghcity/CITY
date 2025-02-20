@@ -1,0 +1,126 @@
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var SubsetSumAppletImpl;
+(function (SubsetSumAppletImpl) {
+    var subsetParams = {
+        maxValue: 99,
+        inColor: "#000",
+        outColor: "#C8C8C8",
+        goodColor: "#00C800",
+        badColor: "#C80000"
+    };
+    var Entry = (function () {
+        function Entry(value, inSolution) {
+            this.value = value;
+            this.selected = false;
+            this.inSolution = inSolution;
+        }
+        return Entry;
+    }());
+    var SubsetSumApplet = (function (_super) {
+        __extends(SubsetSumApplet, _super);
+        function SubsetSumApplet(name, numValues) {
+            var _this = _super.call(this, name) || this;
+            _this.setSize(numValues);
+            _this.listenMousedown();
+            return _this;
+        }
+        SubsetSumApplet.prototype.setSize = function (n) {
+            this.capacity = n * 40;
+            this.array = newProblem(n, this.capacity);
+            this.redraw();
+        };
+        SubsetSumApplet.prototype.reset = function () {
+            this.setSize(this.array.length);
+        };
+        SubsetSumApplet.prototype.sort = function () {
+            this.array.sort(function (a, b) { return a.value - b.value; });
+            this.redraw();
+        };
+        SubsetSumApplet.prototype.solve = function () {
+            for (var _i = 0, _a = this.array; _i < _a.length; _i++) {
+                var elem = _a[_i];
+                elem.selected = elem.inSolution;
+            }
+            this.redraw();
+        };
+        SubsetSumApplet.prototype.redraw = function () {
+            this.background();
+            drawSelection(this.canvas, this.array, this.capacity);
+        };
+        SubsetSumApplet.prototype.mousedown = function (x, y) {
+            var width = this.canvas.offsetWidth;
+            var i = Math.floor((x * (this.array.length + 1)) / width);
+            if (i < this.array.length) {
+                this.array[i].selected = !this.array[i].selected;
+                this.redraw();
+            }
+        };
+        return SubsetSumApplet;
+    }(Applet));
+    SubsetSumAppletImpl.SubsetSumApplet = SubsetSumApplet;
+    function newProblem(size, capacity) {
+        var arr = [];
+        var left = capacity;
+        for (var i = 0; i < size; i++) {
+            var value = void 0;
+            if (left > 0 && left <= subsetParams.maxValue) {
+                value = left;
+            }
+            else {
+                var minValue = left > 0 ?
+                    Math.ceil(capacity / (size - i - 2)) : 11;
+                value = minValue + Math.floor(Math.random() * (subsetParams.maxValue - minValue + 1));
+            }
+            if (left > 0) {
+                arr.push(new Entry(value, true));
+                left -= value;
+            }
+            else {
+                arr.push(new Entry(value, false));
+            }
+        }
+        ArrayUtilities.shuffle(arr);
+        return arr;
+    }
+    function drawSelection(elem, arr, capacity) {
+        var ctx = elem.getContext("2d");
+        var width = elem.offsetWidth;
+        var height = elem.offsetHeight;
+        ctx.font = "15px Arial";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.fillText("Target: " + capacity, width / 2, 20);
+        var ypos = height * 2 / 3;
+        var ncells = arr.length + 1;
+        var len = arr.length;
+        var total = 0;
+        for (var i = 0; i < len; i++) {
+            if (arr[i].selected) {
+                ctx.fillStyle = subsetParams.inColor;
+                total += arr[i].value;
+            }
+            else {
+                ctx.fillStyle = subsetParams.outColor;
+            }
+            ctx.fillText(String(arr[i].value), (2 * i + 1) * width / (2 * ncells), ypos);
+            ctx.fillStyle = "black";
+            ctx.fillText(i + 1 < arr.length ? "+" : "=", (i + 1) * width / ncells, ypos);
+        }
+        ctx.fillStyle = total <= capacity ? subsetParams.goodColor : subsetParams.badColor;
+        ctx.fillText(String(total), (2 * arr.length + 1) * width / (2 * ncells), ypos);
+    }
+})(SubsetSumAppletImpl || (SubsetSumAppletImpl = {}));
+var SubsetSumApplet = SubsetSumAppletImpl.SubsetSumApplet;

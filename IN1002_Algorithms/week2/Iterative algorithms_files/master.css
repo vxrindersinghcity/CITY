@@ -1,0 +1,252 @@
+/* Styles for code-rich Moodle and web page content.
+ * Jo Wood, V2.1.2, 12th February 2015.
+ */
+
+/* Chrome bug fix for fonts.
+-----------------------------------------------------------------------------*/
+
+body
+{
+  -webkit-animation-duration: 0.1s;
+	-webkit-animation-name: fontfix;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-delay: 0.1s;
+}
+
+@-webkit-keyframes fontfix {
+	from{ opacity: 1; }
+	to{	opacity: 1; }
+}
+
+
+/* =Typography
+-----------------------------------------------------------------------------*/
+
+body p
+{
+    color: #000;
+}
+
+.intro {
+	font-size:larger;
+	color:#5A3B15;
+}
+
+.contents, .contents ol, .contents li
+{
+	font-size: small;
+	list-style-type: none;
+}
+
+#annotation {
+	font-family: 'Shadows Into Light', cursive;
+	font-size:small;
+	color: #333;
+	letter-spacing: 0.08em;
+}
+
+h1 {
+	color:#5A3B15;
+	margin-bottom: 0.5em;
+}
+
+code {
+				border: 0;
+				border-radius: 3px;
+				color: #000;
+}
+
+
+/* =Links
+-----------------------------------------------------------------------------*/
+
+.link-show-code {
+  background-color: #eee;
+  border-radius: 10px;
+  color: #555;
+  font-size: 12px;
+  display: inline-block;
+  line-height: 1;
+  padding: 5px 11px;
+  text-decoration: none;
+}
+.link-show-code:hover {
+  background-color: #ef6465;
+  color: #fff;
+}
+.link-show-code-active {
+  background-color: #444;
+  color: #fff;
+  padding: 5px 14px;
+}
+
+
+
+/* =Layout
+-----------------------------------------------------------------------------*/
+#page {
+	max-width: 1000px;
+	padding: 0 10px;
+	margin: 24px auto;
+}
+
+#header {
+	text-decoration: none;
+	font-size: large;
+	margin-bottom:1em;
+	padding-bottom: 0;
+	border-bottom: 1px solid #ddd;
+	width:auto;
+	background:  #f0f0f0;
+}
+
+#header ul, #header li {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	padding-left: 2px;
+}
+
+#header a {
+	text-decoration: none;
+}
+
+.units-row {
+				margin:0;	
+}
+
+.reference {
+	text-indent: -1em; margin-left: 1em;
+	margin-top: 0; margin-bottom: 0.3em;
+}
+
+.indent {
+	margin-left:4em;
+}
+
+
+/* = Higlight boxes
+-----------------------------------------------------------------------------*/
+
+.todo {
+        border-width:1px;
+				border-color: #999;
+        border-style: dashed;
+        border-radius: 2px;
+        background-color: #ff0;
+        padding:0.2em; 
+}
+
+.task, .aside, .tip, .codeTask::before, .codeTask, .challenge::before, .challenge, .homework::before, .homework {
+    border-radius: 8px;
+    font-weight: normal;
+    padding: 0.5em;
+    border: solid;
+    border-color: #ccc;
+    border-width: 1px;
+    margin-bottom: 20px;
+    line-height:130%;
+}
+
+
+.codeTask::before, .homework::before, .challenge::before{
+	-webkit-border-radius: 8px;
+	-webkit-border-bottom-right-radius: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius: 8px;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-radius: 8px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	border-bottom:1px solid #eef;
+	
+	line-height:100%;
+	padding: 0.3em;
+	padding-bottom:1px;
+	font-weight: 600;
+	float: right;
+	margin-bottom:0;
+	margin-top:-2em;
+	margin-right:-0.6em;
+}
+
+.aside { background-color: #efe; border-color: #bcb;}
+.tip { background-color: #fafafa; border-color: #999; padding:0.7em; box-shadow: 8px 8px 5px #999; border-radius: 12px;}
+.task,.codeTask, .codeTask::before {	background-color: #eef;	}
+.homework,.homework::before  { background-color: #F9F9FF; border-color: #999; }
+.challenge, .challenge::before { background-color: #FFE7E7; border-color: #FFB0B0; }
+
+.codeTask::before {	content: "{coding task}";}
+.homework::before {	content: "homework"; }
+.challenge::before {	content: "challenge"; }
+
+
+.codeTask,.homework,.challenge {
+	-webkit-border-radius: 8px;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius: 8px;
+	-moz-border-radius-topright: 0;
+	border-radius: 8px;
+	border-top-right-radius: 0;
+	margin-top:2.5em;
+}
+
+
+.codeTask::before, .homework::before, .challenge::before {
+	-webkit-border-radius: 8px;
+	-webkit-border-bottom-right-radius: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius: 8px;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-radius: 8px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	border-bottom:1px solid #eef;
+
+	line-height:100%;
+	padding: 0.3em;
+	padding-bottom:1px;
+	font-weight: 600;
+	float: right;
+	margin-bottom:0;
+	margin-top:-2em;
+	margin-right:-0.6em;
+}
+
+
+/* = Hidden/revealed text styles.
+-----------------------------------------------------------------------------*/
+
+div#hidden01, div#hidden02, div#hidden03, div#hidden04, div#hidden05, div#hidden06, div#hidden07,
+div#hidden08, div#hidden09, div#hidden10, div#hidden11, div#hidden12, div#hidden13, div#hidden14,
+div#hidden15, div#hidden16, div#hidden17, div#hidden18, div#hidden19, div#hidden20, div#hidden21,
+div#hidden22, div#hidden23, div#hidden24, div#hidden25, div#hidden26, div#hidden27, div#hidden28,
+div#hidden29, div#hidden30
+{
+  margin: 0; padding: 0.5em;
+	border-style: none; border-radius: 6px;
+	background-color: #f6f6ff;
+	display: none;
+}
+	
+.button
+{
+  font-style:italic;
+	color: #666; background-color: #eee;
+	border-style: solid; border-width: 1px; border-color: #ddd; border-radius: 6px;
+	padding: 0.1em; padding-left: 0.5em; padding-right: 0.5em;
+	margin-top: 1em; margin-bottom: 1em;
+}
+
+
+
+/* =Misc
+-----------------------------------------------------------------------------*/
+
+/* Temporary style to show bottom of each row. Comment out when testing completed.
+.units-row {
+				border-bottom: dashed;
+}
+*/

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<!-- saved from url=(0084)https://moodle4.city.ac.uk/pluginfile.php/1265774/mod_resource/content/30/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script id="f5_cspm">(function(){var f5_cspm={f5_p:'CHGNMDJCFCMBJGBDNEDBMDLCJLCEPAHJMHKCIIEGIMOFPMLOLMFHHBABIODGOCIOHBGBFHBKAAHOPJBCKMDAPMIJAAKIFACBDNFDMGFNCGCBCNBNAJDIJLPJIMAHPIBM',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0139236398aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>
+
+<link rel="stylesheet" type="text/css" href="./Introduction to Algorithms_files/shCore.css">
+<link rel="stylesheet" type="text/css" href="./Introduction to Algorithms_files/shThemeDefault.css">
+<link rel="stylesheet" type="text/css" href="./Introduction to Algorithms_files/kube.min.css">
+<link rel="stylesheet" type="text/css" href="./Introduction to Algorithms_files/master.css">
+<link rel="stylesheet" type="text/css" href="./Introduction to Algorithms_files/algorithms.css">
+<link href="./Introduction to Algorithms_files/css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./Introduction to Algorithms_files/shCore.js.download"></script>
+<script type="text/javascript" src="./Introduction to Algorithms_files/shBrushJava.js.download"></script>
+<script type="text/javascript" src="./Introduction to Algorithms_files/applet.js.download"></script>
+<script type="text/javascript" src="./Introduction to Algorithms_files/bararray.js.download"></script>
+<script type="text/javascript" src="./Introduction to Algorithms_files/subsetsum.js.download"></script>
+<script type="text/javascript" src="./Introduction to Algorithms_files/codeapplet.js.download"></script>
+
+<title>Introduction to Algorithms</title>
+</head>
+
+<body style="font-size: 100%; ">
+<div id="page">
+<div class="soiContent">
+  <h1>Week 1. Introduction to Algorithms</h1>
+  <div class="units-row">
+<div class="unit-60">
+  <p><strong>Module leaders</strong>: Professor Jerry Shen (jerry.shen@city.ac.uk)</p>
+  <p>Slide credits: These lecture notes are based on slides by Dr. Ross Paterson</p>
+  <p>This module is about computational problems and the algorithms needed to solve them.</p>
+  <p>We're going to talk about designing and analysing algorithms. </p>
+  <ul>
+<li> We will be using abstraction to help us analyse the computational cost of algorithms (the complexity) 
+</li><li> We will also use abstraction to describe formal languages
+
+</li><li> We will be exercising program structures you already know
+(assignment, conditionals, loops, method calls, variables and arrays)
+</li><li> Designing general methods for solving problems (algorithms)
+</li><li> Thinking about some of the ethical and possibly adverse implications of algorithms in the real world
+</li></ul>
+
+
+<h3>Assessment</h3>
+The assessment is composed of:
+<ul>
+  <li>A programming coursework which is worth 50% of the final mark.</li>
+  <li>A written examination which is worth 50% of the final mark.</li>
+</ul>
+
+<h3>Getting help</h3>
+<ol>
+<li>Come along to your practical session and ask in person.  This
+really is the best way we can help because we can see the problem and
+actually talk it through.</li>
+<li>We have a Moodle discussion forum.  If you post there then any of
+the teaching staff can respond and you will likely get a quicker
+answer.  It also helps everyone else on the course because if you have
+a question, chances are there are another 8 people who are interested
+in the answer.</li>
+<li>Jerry has office hours (1:00PM - 3:50PM, Every Friday).</li>
+<li>If all else fails then drop us an e-mail.  We endeavour to reply
+ASAP but be aware that at peak times we get a lot of e-mail!</li>
+</ol>
+
+
+<h3>Learning goals</h3>
+<ul>
+<li> Explain the workings of standard algorithms
+</li><li> Analyse the complexity of algorithms
+</li><li> Select appropriate algorithms for particular practical situations
+</li><li> Design algorithms and describe them using plain English or pseudocode
+</li><li> Describe formal languages using regular expressions and context free grammars
+</li><li> Relate regular expressions to finite state automata
+</li></ul>
+
+</div>
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>How to achieve the learning goals</h3>
+<ul>
+<li> Work continuously
+</li><li> Attend the lectures
+</li><li> Go to the tutorials and do the exercises
+</li><li> Program the algorithms yourself
+</li><li> Read the literature
+</li><li>
+The module is designed to require a total of
+150 hours of study, there are 30 hours on the
+timetable, leaving you with 120 hours to
+timetable yourself ...
+</li></ul>
+
+</div>
+
+<div class="unit-40">
+<blockquote>
+Go to every lecture, and try every single tutorial question.
+It's a subject where you have to try it out for yourself to become good at it.
+<br>
+<div align="right">
+Past student comment
+</div>
+</blockquote>
+</div>
+
+</div>
+
+<div class="units-row">
+<div class="unit-80">
+
+<h3>Materials</h3>
+<p>
+All materials will be available on Moodle:
+</p><ul>
+<li> Lecture notes, with exercises at the end.
+</li><li> Solutions will be made available in the following week.
+</li></ul>
+<p>
+Together (but excluding challenge exercises and labelled extension materials)
+they will define the examinable course content.
+
+</p><p>
+There is no required textbook.
+As algorithms are a core part of computer science,
+there are many texts at various depths.
+Some of those available from the University library:
+</p><ul>
+<li><i>Introduction to the design and analysis of algorithms</i>,
+by Anany Levitin, Addison-Wesley, 2003.
+(<a href="http://library.city.ac.uk/record=b1224883">in the library</a>)
+</li><li><i>Algorithms</i>,
+by Robert Sedgewick and Kevin Wayne, Addison-Wesley, 2011.
+(<a href="http://library.city.ac.uk/record=b2402708">in the library</a>)
+</li><li><i>Introduction to Algorithms</i>,
+by Cormen, Leiserson, Rivest and Stein, MIT Press, 2009.
+(<a href="http://library.city.ac.uk/record=b1740489">in the library</a>,
+also available online from the library)
+</li></ul>
+
+
+
+<p></p>
+</div>
+<div class="unit-20">
+<img src="./Introduction to Algorithms_files/Levitin.jpg">
+<img src="./Introduction to Algorithms_files/Sedgewick.png">
+<img src="./Introduction to Algorithms_files/CLRS.jpg">
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-80">
+
+</div>
+
+</div>
+
+<div class="units-row">
+<div class="unit-80">
+
+<h3>Schedule</h3>
+<ol>
+<li> Introduction
+</li><li> Introducing complexity: iterative algorithms (cost e.g. time or space costs, and loops)
+</li><li> Simple sorting methods 
+</li><li> Exponential and logarithmic complexity
+</li><li> Recursive algorithms (a procedure that calls itself)
+</li><li> <i>reading week (no classes)</i>
+</li><li> Divide-and-conquer sorting (recursion for faster sorting algorithms)
+</li><li> The limits of algorithms (problems for which there are no good algorithms, and problems that can't be solved at all)
+</li><li> Regular languages and finite state automata
+</li><li> Context-free grammars
+</li><li> Revision
+</li></ol>
+<h4><a href="https://youtu.be/GJdiM-muYqc">Why do we care?</a></h4>
+<br>
+
+<h3>This session</h3>
+
+
+<ul>
+<li>Introducing algorithms
+</li><li>Describing algorithms using pseudocode
+</li><li>Introducing some of the problems we'll consider
+</li><li>A peek ahead at analysis of cost (which computer scientists call complexity)
+</li></ul>
+
+<h2>Algorithms</h2>
+<p>
+Our focus for the rest of this session and most of this module will be on <strong>algorithms</strong>.
+</p><p>
+There are many broadly similar definitions of an algorithm.
+</p><p> Informally, an <strong><em>algorithm</em></strong> is any well-defined computational 
+procedure that takes some value, or set of values, as <strong><em>input</em></strong> and 
+produces some value, or set of values, as <strong><em>output</em></strong>. An algorithm is 
+thus a sequence of computational setps that transform the input into the output. </p>
+
+
+</div>
+
+<div class="unit-20">
+<img src="./Introduction to Algorithms_files/Muḥammad_ibn_Mūsā_al-Khwārizmī.png">
+<p class="annotation">
+The word "algorithm" comes from a Latin version of the name of
+a 9th-century Persian mathematician,
+Abū ʿAbdallāh Muḥammad ibn Mūsā al-Khwārizmī. Acknowledged as the founder of algebra.
+<img src="./Introduction to Algorithms_files/Carpenter_portrait_of_Ada_Lovelace_-_detail.png">
+</p><p class="annotation"> Ada Lovelace is attributed with writing and publishing the first algorithm ever specifically tailored for implementation on a computer - in the 19th Century. She is often cited as the first computer programmer. </p>
+<p class="annotation"></p></div>
+</div>
+
+
+
+<div class="units-row">
+<div class="unit-80">
+
+
+<p> This definition is from Andrei Markov, writing in 1954:
+
+</p><div class="definition">
+[An] <em>algorithm</em> is ... an exact prescription, defining a computational
+process, leading from various initial data to the desired result.
+</div>
+
+There a number of features here that occur in most definitions of
+algorithm:
+<dl>
+<dt>exact prescription</dt><dd>
+a precise and unambiguous description.
+</dd><dt>computational process</dt><dd>
+a sequence of steps that can be
+executed mechanically, also known as an "effective" process.
+</dd><dt>initial data</dt><dd>
+the input data to the process.
+This implies that an algorithm is a general procedure,
+solving not just one problem,
+but any one of a family of problems selected by the user.
+</dd><dt>result</dt><dd>
+the output data of the process.
+Produces a result implies that the execution of an algorithm must terminate in a finite
+number of steps to provide an answer. 
+</dd></dl>
+
+<p>
+Examples of algorithms are the arithmetic procedures we learned in school:
+addition, multiplication, long division, etc.
+
+</p><p>Several algoritms might exist to solve the same problem</p>
+
+
+<p></p><p> 
+
+</p></div>
+
+<div class="unit-20"> </div>
+</div>
+
+<h3>Describing an algorithm</h3>
+<p> Here are some different ways that we can describe the same algorithm. </p>
+<p>
+</p><p> As <strong>unstructured</strong> <strong>text</strong>:
+  Add the values in an array one by one and return the resulting sum. But it needs to be precise!</p>
+<div class="units-row">
+<div class="unit-30">
+  <p> As <strong>structured text</strong>: </p>
+  <p></p><ul>
+<li> set the total so far to 0.
+</li><li> for each array element,
+<ul>
+<li> add the value to the total so far.
+</li></ul>
+</li><li> return the total.
+</li></ul>
+</div>
+
+<div class="unit-30"> As <strong>pseudocode</strong>:
+<div class="pseudocode" id="Sum">
+<div class="codeheader">Sum(a[0..n-1])</div>
+<pre>total ← 0
+i ← 0
+WHILE i &lt; n
+        total ← total + a[i]
+        i ← i+1
+RETURN total
+</pre>
+</div>
+</div>
+
+<div class="unit-40"> As <strong>Java</strong> code
+<div><div id="highlighter_258413" class="syntaxhighlighter nogutter shextras java"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="java keyword">public</code> <code class="java keyword">int</code> <code class="java plain">sum(</code><code class="java keyword">int</code><code class="java plain">[] a) {</code></div><div class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">int</code> <code class="java plain">total = </code><code class="java value">0</code><code class="java plain">;</code></div><div class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">int</code> <code class="java plain">i = </code><code class="java value">0</code><code class="java plain">;</code></div><div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">while</code> <code class="java plain">(i &lt; a.length) {</code></div><div class="line number5 index4 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">total = total + a[i];</code></div><div class="line number6 index5 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">i++;</code></div><div class="line number7 index6 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">}</code></div><div class="line number8 index7 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">return</code> <code class="java plain">total;</code></div><div class="line number9 index8 alt2"><code class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+
+</div>
+
+
+<div class="units-row">
+<div class="unit-80">
+
+
+<p></p><p> 
+</p><p>
+</p><h3>Pseudocode</h3>
+
+<p>
+To describe algorithms in a language-independent way,
+it is conventional to use pseudocode rather than any
+particular programming language.
+Plain text is often ambiguous.
+</p><p>
+Pseudocode
+</p><ul>
+<li>abstracts away from specific programming languages 
+</li><li>describes sequential computations, with assignment, conditionals, loops
+and function/procedure calls
+</li><li>has less syntactic noise than typical languages,
+for easier comprehension
+</li><li>typically indicates structure using indentation
+</li><li>often uses left arrow for assignment
+</li><li>avoids many of the finer details of a programming language,
+without sacrificing precision.
+</li><li>may include pieces of English text, as long as the meaning is precise
+</li></ul>
+<p>
+There is no fixed notation, but you must
+</p><ul>
+<li>be consistent with syntax, formatting and keywords
+</li><li>be precise and unambiguous
+</li></ul>
+Other good ideas:
+<ul>
+<li> Choose an appropriate level of abstraction
+</li><li> Break the algorithm up into manageable functions
+(e.g. under a dozen lines)
+</li></ul>
+<p>
+You are expected to be able to read (and write) algorithms in pseudocode,
+and to translate them to both English and programming languages (e.g. Java).
+
+</p></div>
+</div>
+
+<h3>Tracing an iterative algorithm</h3>
+
+<p>An important part of this module is gaining a solid grasp of control
+structures like loops.
+(Later we'll deal with recursion.)
+
+</p><div class="task">
+<p> One way to investigate an algorithm like <code>Sum</code> is to trace its
+  execution on a sample array. Psuedocode is on the right. This applet allows you to execute the algorithm one step at a time,
+  showing how the state is updated at each step. Where the state consists of the array and the variables. 
+  </p><p> It takes in as input is an array a. We use the convention that arrays start at position 0 and go to n-1.  </p>
+  <p> So here, n is 5, an array with 5 elements. The first one at position 0, the last one at position n-1 = 4.</p>
+<p></p><div align="center">
+<canvas id="sumArray" width="600" height="190">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>
+<button onclick="sumArray.reset()">Reset</button>
+<button onclick="sumArray.step()">Single step</button>
+<button onclick="sumArray.bigStep()">Big step</button>
+<button onclick="sumArray.run()">Run</button>
+<button onclick="sumArray.stop()">Stop</button>
+</p></div>
+
+<script language="JavaScript">
+var sumArray = new CodeApplet("sumArray", "Sum", {a: [6,9,3,8,7]});
+
+getProcedure("Sum").cellColour = leftToRightColour("a", "i");
+</script>
+
+<p>
+We can use this to keep track of the state of the algorithm. The state of the <code>Sum</code> algorithm consists of the array
+(which doesn't change here) and the variables <code>total</code> and <code>i</code>. We are particularly interested in what the state is at the top of the loop. We're going to focus on the values of the variable each time we reach the top of the loop, and the relationship between the values.
+</p><p> We can trace the loop by tabulating the values at each iteration at the top of the loop: </p>
+
+<center>
+<table>
+<tbody><tr><td></td><td>total</td><td>i</td></tr>
+<tr><td>On entering the loop</td><td>0</td><td>0</td></tr>
+<tr><td>After the first iteration</td><td>6</td><td>1</td></tr>
+<tr><td>After the second iteration</td><td>15</td><td>2</td></tr>
+<tr><td>After the third iteration</td><td>18</td><td>3</td></tr>
+<tr><td>After the fourth iteration</td><td>26</td><td>4</td></tr>
+<tr><td>After the fifth iteration</td><td>33</td><td>5</td></tr>
+</tbody></table>
+</center>
+
+<p>
+When <code>i</code> has reached 5, <code>i &lt; n</code> is false
+and the loop exits.
+The algorithm then returns the final value of <code>total</code>, namely 33.
+
+</p><p> What is the relationship between these values at the top of the loop? Total is the sum of the first i elements of the array.When i=0, it's the sum of 0 elements. When i = 1 it's the sum of the first element. When i = 2 its the sum of the first 2 elements etc. When i = 5 it's the sum of the first 5 elements, which is all the elements in the array, and we'll stop. </p>
+</div>
+
+<div class="units-row">
+<div class="unit-80">
+
+<h2>Problems</h2>
+
+Algorithms are procedures that solve problems with inputs and outputs. There are lots of different kinds of computation problems that occur in programming tasks, including the following domains:
+<dl>
+<dt>Searching</dt><dd>
+find an element in a collection, find a subsequence with certain properties (e.g. find a path through a maze, find a solution to a puzzle)
+</dd><dt>Sorting</dt><dd>
+take a collection of things and arrange elements in order (very common, and also often a component of bigger tasks, e.g. finding duplicates in a collection)
+</dd><dt>Text processing</dt><dd>
+find occurrences of a substring, formatting of text (e.g. looking for DNA sequence)
+</dd><dt>Numerical operations</dt><dd>
+arithmetic on large numbers, factorization, matrix operations
+</dd><dt>Computational geometry</dt><dd>
+collision detection, convex hull, mesh generation (e.g. in graphics)
+</dd><dt>Combinatorial problems</dt><dd>
+given a collection of items, find a selection or combination satisfying certain criteria. Many of these problems are hard. E.g. Hamilton graph - can you find a path through the graph that visits each node exactly once. Graph refers to these things with nodes and edges between the nodes. This is not an algorithm because it's a single instance, but you could talk about an algorithm for hamiltonian paths in arbitrary graphs. 
+</dd></dl>
+
+<p>
+In each of these application areas, we might have different types of problems, classified by the type of results that are expected. These could include:
+</p><dl>
+<dt>Decision problems</dt><dd>
+Is a statement true or false? e.g. An algorithm that decides if a particular graph contains a hamiltonian path or not. Or whether a boolean expression could be true for some assignment of the variables or not. 
+</dd><dt>Search problems</dt><dd>
+You might be interested in finding a solution that passes a given test (rather than knowing if there is a solution or not). e.g. timetabling, path finding.
+</dd><dt>Optimization problems</dt><dd>
+You're interested in finding a solution which is the best soluton in some sese. e.g. shortest path.
+</dd></dl>
+</div>
+
+<div class="unit-20">
+
+<p>
+C G A A C A C A T T C G G C G G T G G T A G A C C G C A A C C A C <span style="color: red;">A T C</span> T A T A A <span style="color: red;">A T C</span> C C T T T T G A T G G A A A G T G G T G G G G C C T T G A G C T A A A T T <span style="color: red;">A T C</span> C G A T G A C A G A T A T T G T G A C C T A C
+
+</p><p class="annotation">
+Substrings of a string
+
+</p><p>
+
+<img src="./Introduction to Algorithms_files/Graph_of_20-fullerene_w-nodes.svg">
+ </p><p class="annotation">
+A graph (Hamilton's puzzle: find a walk that visits each node exactly once)
+
+</p></div>
+
+</div>
+
+<h3>Sorting</h3>
+
+<div class="units-row">
+<div class="unit-80">
+
+<p>
+Having the elements of an array in increasing order can help with a lot
+of tasks, e.g. searching.
+Algorithms to get an array in order, <em>sorting</em> algorithms,
+are an important class, and any computing professional should be familiar
+with the major ones.
+We'll be covering simple sorting algorithms in week 3,
+and more efficient ones in week 7.
+
+</p><p>
+Below are a couple of applets exploring sorting of arrays,
+based around basic operations of swapping and moving elements respectively.
+
+</p><div class="task">
+<h4>Sorting by swapping - Selection Sort</h4>
+Sorting is a common problem, and often a component in larger algorithms. 
+<p>The applet below presents the problem of sorting a collection of elements into
+	ascending order, with the basic operation being to swap two elements.</p>
+<p> You need to get the elements into order. The smallest on the left, the largest on the right. You can swap 2 things, without using extra memory (or just one variable). 
+To do this, you need to select two elements:</p>
+<ol>
+<li>Click on an element to select it for swapping.
+</li><li>Then click on another one to swap it with.
+</li></ol>
+Repeat until the array is in ascending order.
+Pressing <button onclick="swapSort.reset()">Reset</button>
+re-shuffles the array.
+<canvas id="swapSort" width="480" height="240">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>Let's have a race</p>Can you think of a way of doing this systematically (i.e. an algorithm)?
+<p> One way is to pick the smallest one and move it to the leftmost position. Then pick the next smallest one and move it to the next left-most place. This is called Selection Sort.</p>
+</div>
+
+<script type="text/javascript">
+var swapSort = new BarArrayApplet("swapSort", 16);
+swapSort.clickElement = function(pos) {
+	if (this.selection.isSet()) {
+		swap(this.array, this.selection.index, pos);
+		this.selection.clear();
+	} else {
+		this.selection.index = pos;
+	}
+};
+</script>
+
+<div class="task">
+<h4>Sorting by moving - Insertion Sort </h4>
+This applet is a variant of the previous one, but here the basic operation
+is to move an element to a new position, and it bumps up all the rest to the right.
+As before, you need to select two elements:
+<ol>
+<li>Click on an element to select it to be moved.
+</li><li>Then click on a location to move it to.
+</li></ol>
+Because the elements are held in an array, this means moving all the elements
+in between by one position to make room for the moved element.
+Pressing <button onclick="moveSort.reset()">Reset</button>
+re-shuffles the array. Have a go!
+<canvas id="moveSort" width="480" height="240">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+Again, can you think of a way of doing this systematically? 
+<p> The difference is that in Selection Sort, I'm building up on the left hand side things that are already sorted. In this sort, (insertion sort) we're building up on the left side things that are already in order. And each time I get something new, I move it into the right place in the things i've already got. </p> 
+</div>
+
+<script type="text/javascript">
+var moveSort = new BarArrayApplet("moveSort", 16);
+moveSort.clickElement = function(pos) {
+	if (this.selection.isSet()) {
+		move(this.array, this.selection.index, pos);
+		this.selection.clear();
+	} else {
+		this.selection.index = pos;
+	}
+};
+</script>
+
+<p>
+We'll cover standard sorting algorithms in detail in weeks 3 and 7,
+and use them to illustrate some general algorithm design principles.
+</p></div>
+
+<div class="unit-20">
+<img src="./Introduction to Algorithms_files/Sir_Tony_Hoare_IMG_5125.jpg">
+<p class="annotation">
+Sir Tony Hoare, inventor of the quicksort algorithm
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h2>Comparing algorithms: complexity analysis</h2>
+
+<p>
+There may be several algorithms that could be used to solve a particular
+type of problem.
+What makes a good algorithm? What does it mean that one algorithm is better than another?
+</p><dl>
+<dt> Correctness </dt><dd>
+This is essential.  We shall be discussing methods used to show that
+algorithms produce the desired result. It must always give the correct answer.
+</dd><dt> Efficiency </dt><dd>
+How much resources do we need? Usually we are concerned with time, but sometimes also space. Is the algorithm fast? Does it make economical use of memory?  
+</dd><dt> Simplicity </dt><dd>
+This is desirable, but can be sacrificed.
+</dd></dl>
+
+
+In computer science, we use an unusual term:
+<p>
+	
+</p>
+<div class="definition">
+The <em>complexity</em> of an algorithm is its cost, expressed as a function of the size of the input. 
+<em>Time complexity</em> concerns running time,
+whereas <em>space complexity</em> concerns memory usage.
+</div>
+
+We will be mainly concerned with time complexity,
+but will occasionally mention space.
+<p></p>
+<h3>Time complexity</h3>
+
+<p>
+How do we measure time? 
+</p><ul>
+<li>Elapsed time in seconds: easy to measure, but specific to the particular
+machine used for the measurements.
+It's not easy to predict values for other machines, or the effects of
+increased machine speed.
+We want it to be abstracted away from the particular performance of specific machines, because we want to make it relevant even when computers change and become twice as fast.
+</li><li>Count some basic operation of the algorithm:
+gives a machine-independent measure. So, instead of seconds, we will count operations (e.g. number of swaps, or times we compare 2 things). 
+</li></ul>
+ <p></p>
+<p>
+
+</p><p>We are interested in the relationship between the size of the input (measured in some agreed way) and the amount of time it takes to execute the algorithm.
+We expect that larger inputs will require more time, but we want to know how much more.
+</p>
+<p>Complexity is not about how complicated something is. It is about the way the cost increases as a function of the size of the input. </p>
+<p>
+
+</p><p>
+
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Average case and worst case complexity</h3>
+<p>Even when we simplify things by counting operations, an algorithm may take
+  different amounts of time for inputs of the same size.</p>
+<p>The first graph shows insertion sort run with different arrays. Along the horizontal axis is the size of the input. Along the vertical axis is the time it takes. 
+  The graph shows the experimentally measured relationship between
+  input size and running time for a particular algorithm.
+  Each red dot shows the size of the input and running time (operations, e.g. comparisons) for a different randomly
+  generated input. The amount of time that an insertion sort took on a particular array. </p>
+<p> The blue line is the average time compexity. The green line is the worst case (no dots above the green line).&nbsp;In the case of Insertion sort, it's exactly double the average case.</p>
+<p>
+</p><p><strong>Worst case:</strong> For some applications, we might need to know the guaranteed maximum time for a given input size. We need the worst case complexity, the upper limit of the cost of an algorithm.</p>
+<p> In the first example on the right - Insertion Sort - (which we'll return to in week 3),
+  the worst case is approximately double the average case. It is a factor of 2.
+  Close relationships of this kind are common.
+  In the second example - Quicksort - (which we'll return to in week 7),
+  it's a lot worse than the average case. </p>
+<p>
+Usually we prefer to work with worst case complexity, for a number of reasons:
+</p><ul>
+<li>
+The absolute guarantees of the worst case analysis are often required. Sometimes you need to know the worst case.
+</li><li>
+It's usually much easier to work out than average case complexity.
+</li><li>
+It's usually close, or closely related, to the average case.
+</li></ul>
+<p>
+However, sometimes the two are very different
+(as in the second example at right),
+and we need to bear both in mind. With insertion sort one line is double the other. With quicksort the ratio between the two lines is increasing as the input increases.
+
+</p><p>
+We could also consider best case complexity, but it's not very useful.
+</p></div>
+
+<div class="unit-40">
+<img src="./Introduction to Algorithms_files/insertionsort.svg">
+<p class="annotation">
+For insertion sort, the worst case is approximately double the average case.
+</p>
+
+<img src="./Introduction to Algorithms_files/quicksort.svg">
+<p class="annotation">
+For quicksort, the worst case is much worse than the average case
+(which is much faster than insertion sort)
+</p></div>
+</div>
+</div>
+
+<h3>Comparing complexity functions</h3>
+
+<div class="units-row">
+<div class="unit-60">
+  <p>How do we know which algorithm is better? It depends on the size of the input. But we'll look at large inputs, because that's when we'll get worried about the resources required. Therefore, we can say that Algorithm C is better.</p>
+  <p>Whether we consider the average or the worst case,
+    we shall describe an algorithm using a complexity function.
+    For time complexity, this will be the relationship between input size and time.
+    Consider the three complexity functions of three algorithms in the graph at
+    right.
+    Which is better? </p>
+  <p>
+  </p><p> When we look at input sizes large enough to make only the order of growth of the running time relevant, we are studying the <strong><em>asymptotic</em></strong> effiency of algorithms. We are not so concerned with smaller inputs because they take up much less resources. It's when the input gets large that we need to start being concerned about how much time it takes. </p>
+  <p>
+</p><h3>Asymptotic computational complexity</h3>
+
+</div>
+
+<div class="unit-40">
+<img src="./Introduction to Algorithms_files/overtaking.svg">
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+Focussing on the asymptotic behaviour also simplifies things - the calculations turn out simpler.
+</p><p>We're going to use this big O notation, also called asymptotic complexity. It ignores constant factors and smaller terms, to simplify the calculations and preserve the important information.</p>
+<p> Take for example the graph at right which might be comparing 2 complexity functions. As they get very large, the difference between them in terms of total cost is not significant.  As <em>n</em> gets larger, the proportional contribution of the other terms shrinks, and we can ignore them without sacrificing much information. For example, if we have &nbsp;an <em>n</em><sup>3</sup> we can ignore the <em>n</em><sup>2</sup>, &nbsp;the 5n and the constant, because compared to the <em>n</em><sup>3</sup>, these become insignificant. Constant factors will also be ignored - e.g. we'll group <em>n</em><sup>3</sup> together with 3<em>n</em><sup>3</sup>. We say both functions have order <i>n</i> cubed, or
+<i>O</i>(<i>n</i><sup>3</sup>) for short.</p>
+<p>
+</p><p>
+</p><p>So we can group algorithms into classes that give  a quick understanding of their running time. Later we'll start using &nbsp;O( )  - ("Big Oh") notation. So we can say that the two algorithms in the graph at right are both of order O(<em>n</em><sup>3</sup>). 
+ </p><p> In general, we shall consider only the fastest-growing term. So we're drastically simplifying things, but it gives us a nice way of pigeon holing different algorithms. So we can say that both Selection Sort and Insertion Sort are both order <em>n</em><sup>2</sup> algorithms for sorting. At that crude level they have the same performance. Quicksort on the other hand has an order <em>n</em><sup>2</sup> worst case, but it's average case is order n log n (we'll see more in week 4). </p>
+<p>
+
+</p><p>
+</p><p>
+
+
+</p><p> By ignoring all these details, we end up with an abstract description
+  of an algorithm's performance, that is machine-independent and easy
+  to work with.  (More about this next week). We will group algorithms into classes with the same complexity.</p>
+</div>
+
+<div class="unit-40">
+<img src="./Introduction to Algorithms_files/minor-terms.svg">
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h2>The limits of algorithms</h2>
+
+<p>Some problems can't be solved in a reasonable amount of time.
+Some can't be solved at all.
+We'll explore this further in week 8.
+
+</p><h3>Hard problems: knapsack</h3>
+
+<p>
+Suppose you are faced with a collection of items,
+each with a weight (in kg) and a value (in pounds).
+You can only carry a certain weight.
+What selection of those items will fit into the knapsack but provide the most value? The complexity of any algorithm for this problem goes up very steeply with input size. 
+
+</p><div class="aside">
+This is actually a special case, the 0-1-knapsack problem.
+In the general version you can have as many of each item as you like.
+</div>
+
+</div>
+<div class="unit-40">
+<img src="./Introduction to Algorithms_files/Knapsack.svg">
+
+</div>
+</div>
+
+<div class="task">
+<h4>Subset sum</h4>
+The subset problem is a special case of the 0-1 knapsack problem,
+in which the values are the same as the weights.
+Try to find an exact solution for the problem of
+<input type="text" id="subsetSize" size="2" value="7" onchange="subsetSum.setSize(Number(this.value))">
+numbers below.
+Click on numbers to include or exclude them.
+Press <button onclick="subsetSum.reset()">Reset</button> to get a new problem.
+
+<canvas id="subsetSum" width="650" height="100">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script language="JavaScript">
+var subsetSum = new SubsetSumApplet("subsetSum",
+	Number(document.getElementById('subsetSize').value));
+</script>
+
+<p>You can press <button onclick="subsetSum.sort()">Sort</button>
+to arrange the numbers in ascending order.  Does that help?
+
+</p><p>What strategies give solutions close to optimal?
+
+</p><p>Give up?
+you can press <button onclick="subsetSum.solve()">Solve</button>
+to get a solution.
+(There might be others.)
+
+</p><p>Try changing the problem size above.
+  What do you think happens to the time taken to solve knapsack
+  problems as the set of items grows? This is an example of an algorithm that takes a lot of time - a hard, or tractable algorithm.</p>
+  
+</div>
+
+<div class="units-row">
+<div class="unit-60"> 
+<h3> Tractability and Intractability</h3>
+<p>A problem is called tractable if there is an efficient (i.e. polynomial-time) algorithm that solves it. A problem is called intractable if there is no efficient algorithm that solves it. </p>
+<p>The Knapsack Problem is an example of a <em>hard</em> or intractable problem,
+  i.e. one for which we don't have an efficient algorithm. None of the known algorithms is significantly faster than the naive approach
+  of trying every possible combination (which is very bad). &nbsp;
+  </p><p>The naive algorithm: Let's consider all the possibilities - for each thing, it can be in or out. With 10 numbers, there are 1024 combinations (2 <sup>10 </sup>= 1024). Check all the combinations and we'll find an answer. But 10 number takes roughly 1000 steps. If we have 11 numbers that's 2000 steps. 12 numbers = 4,000 steps etc. In 2 years time your computer might be twice as fast, but that means you'll be able to do 1 more number. </p>
+  <p>
+  It's worse than that: nobody knows of a fast algorithm,
+  but also nobody knows whether a fast algorithm exists
+  (though most people believe it doesn't). Nobody has proved that such an algorithm doesn't exist.
+  And this is only one of many problems in this situation. It is an open problem in computer science.</p>
+<p>
+</p><div class="aside"> Infeasibility (or intractability) can be useful: it is the key to security. E.g. the cost of cracking an encryption key increases exponentially with the size of the key. Cracking a message encrypted with a 1024 Byte key is going to take hundreds of years. That would be good if we could know that the problems involved really are intractable. But no one has managed to prove it as we'll see later. </div>
+
+<h3>Some problems are unsolvable</h3>
+
+<p>Some problems are even worse: no algorithm at all exists for them.
+It's not just that no-one has found one; we can prove that no algorithm exists.
+(Example: determine whether two Java programs always give the same output
+for the same input?)
+</p><p>
+</p><h3>
+Ethical Considerations of Algorithms
+</h3>
+Algorithms are now starting to impact all of our lives, for good and for bad. We are starting to see some of the negative consequences of algorithms and they are impacting all aspects of our lives. They are becoming more powerful and more pervasive. Therefore it is important for computer programmers to consider the ethical implications or even negative consequences of the designs of algorithms in the real world. It is important to think about the possible negative implications as early as possible in the design process. Technology and algorithms are not neutral. As we will see, they contain all our human biases. This short film introduces some ethical implications and moral considerations of algorithms in the case of 
+<a href="https://www.ted.com/talks/patrick_lin_the_ethical_dilemma_of_self_driving_cars?language=en#t-1645" target="new">self driving cars</a>
+<p></p>
+
+</div>
+
+<div class="unit-40">
+
+<img src="./Introduction to Algorithms_files/Knapsack(1).svg">
+<p class="annotation">
+Time complexity function for a naive algorithm for the knapsack problem.
+</p></div>
+</div>
+
+<hr noshade="" size="1">
+
+</div>  <!-- End of soiContent -->
+ <!-- end of page -->
+
+<script type="text/javascript">SyntaxHighlighter.all()</script>
+
+
+
+</body></html>

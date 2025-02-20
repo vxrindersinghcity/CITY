@@ -1,0 +1,144 @@
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var BarArrayAppletImpl;
+(function (BarArrayAppletImpl) {
+    var ArraySelection = (function () {
+        function ArraySelection() {
+            this.index = -1;
+        }
+        ArraySelection.prototype.clear = function () { this.index = -1; };
+        ArraySelection.prototype.isSet = function () { return this.index >= 0; };
+        ArraySelection.prototype.contains = function (i) { return i === this.index; };
+        return ArraySelection;
+    }());
+    var ArrayDone = (function () {
+        function ArrayDone() {
+            this.count = 0;
+        }
+        ArrayDone.prototype.clear = function () { this.count = 0; };
+        ArrayDone.prototype.contains = function (i) { return i < this.count; };
+        return ArrayDone;
+    }());
+    var BarArrayApplet = (function (_super) {
+        __extends(BarArrayApplet, _super);
+        function BarArrayApplet(name, size) {
+            var _this = _super.call(this, name) || this;
+            _this.selection = new ArraySelection();
+            _this.done = new ArrayDone();
+            _this.array = newArray(size);
+            _this.reset();
+            _this.listenMousedown();
+            return _this;
+        }
+        BarArrayApplet.prototype.changed = function () {
+            this.redraw();
+        };
+        BarArrayApplet.prototype.redraw = function () {
+            this.background();
+            drawArray(this.canvas, this.array, this.selection, this.done);
+        };
+        BarArrayApplet.prototype.reset = function () {
+            ArrayUtilities.shuffle(this.array);
+            this.selection.clear();
+            this.done.clear();
+            this.changed();
+        };
+        BarArrayApplet.prototype.clickElement = function (pos) { };
+        BarArrayApplet.prototype.mousedown = function (x, y) {
+            var pos = currentPos(this.canvas, this.array, x);
+            this.clickElement(pos);
+            this.changed();
+        };
+        return BarArrayApplet;
+    }(Applet));
+    BarArrayAppletImpl.BarArrayApplet = BarArrayApplet;
+    function currentPos(elem, arr, x) {
+        var numBars = arr.length;
+        var margin = getMargin(elem);
+        var drawWidth = elem.offsetWidth - 2 * margin;
+        var index = Math.floor((x - margin) / drawWidth * numBars);
+        if (index < 0) {
+            index = 0;
+        }
+        else if (index >= numBars) {
+            index = numBars - 1;
+        }
+        return index;
+    }
+    function drawArray(elem, arr, sel, done) {
+        var ctx = elem.getContext("2d");
+        var width = elem.offsetWidth;
+        var height = elem.offsetHeight;
+        var margin = getMargin(elem);
+        var maxHeight = height - 2 * margin;
+        var drawWidth = width - 2 * margin;
+        var step = maxHeight / arr.length;
+        var base = height - margin;
+        var numBars = arr.length;
+        var barWidth = Math.round(drawWidth / numBars * 0.6);
+        for (var i = 0; i < numBars; i++) {
+            var xpos = margin + drawWidth * (i + 0.5) / numBars - barWidth / 2;
+            var barHeight = arr[i] * step;
+            var ypos = base - barHeight;
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 1;
+            if (sel.contains(i)) {
+                ctx.fillStyle = ColourScheme.highlight;
+            }
+            else if (done.contains(i)) {
+                ctx.fillStyle = ColourScheme.done;
+            }
+            else {
+                ctx.fillStyle = "#7af";
+            }
+            ctx.fillRect(xpos, ypos, barWidth, barHeight);
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 0.6;
+            ctx.strokeRect(xpos, ypos, barWidth, barHeight);
+        }
+    }
+    function getMargin(elem) {
+        return Math.min(elem.offsetWidth, elem.offsetHeight) / 8;
+    }
+    function newArray(n) {
+        var arr = [];
+        for (var i = 1; i <= n; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
+    function initOrdered(arr) {
+        var i = 1;
+        while (i < arr.length && arr[i - 1] <= arr[i]) {
+            i++;
+        }
+        return i;
+    }
+    BarArrayAppletImpl.initOrdered = initOrdered;
+    function initLeast(arr) {
+        var min = initOrdered(arr);
+        var len = arr.length;
+        for (var i = min; i < len; i++) {
+            while (min > 0 && arr[min - 1] > arr[i]) {
+                min--;
+            }
+        }
+        return min;
+    }
+    BarArrayAppletImpl.initLeast = initLeast;
+})(BarArrayAppletImpl || (BarArrayAppletImpl = {}));
+var BarArrayApplet = BarArrayAppletImpl.BarArrayApplet;
+var initOrdered = BarArrayAppletImpl.initOrdered;
+var initLeast = BarArrayAppletImpl.initLeast;

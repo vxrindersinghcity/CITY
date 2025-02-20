@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<!-- saved from url=(0089)https://moodle4.city.ac.uk/pluginfile.php/885208/mod_resource/content/16/notes/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script id="f5_cspm">(function(){var f5_cspm={f5_p:'KMJBJHIELENFCFOIBBLPCKBLJCPNGIJDHGHPPGDBBKJKNNDEGDNKLGOIGJBEBDBFOMFBDAIOAAHIHEBAEMAAHGFBAALKAEOHHOJGCGPPALJNIMEFFMLBANFPJDEKHFPJ',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0139236398aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>
+
+<link rel="stylesheet" type="text/css" href="./Iterative algorithms_files/moodle-custom-styles.css">
+<link rel="stylesheet" type="text/css" href="./Iterative algorithms_files/kube.min.css">
+<link rel="stylesheet" type="text/css" href="./Iterative algorithms_files/master.css">
+<link rel="stylesheet" type="text/css" href="./Iterative algorithms_files/algorithms.css">
+<link href="./Iterative algorithms_files/css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./Iterative algorithms_files/applet.js.download"></script>
+<script type="text/javascript" src="./Iterative algorithms_files/codeapplet.js.download"></script>
+
+<title>Iterative algorithms</title>
+</head>
+
+<body style="font-size: 100%; ">
+<div id="page">
+<div class="soiContent">
+
+<h1>Iterative algorithms</h1>
+
+<div class="units-row">
+<div class="unit-60">
+
+The topic for this session is iteration,
+i.e. expressing algorithms using loops.
+We'll consider three tools to reason about such algorithms:
+<dl>
+<dt>Loop invariants
+</dt><dd>for demonstrating partial correctness
+</dd><dt>Loop control variables
+</dt><dd>for keeping track of when to exit the loop
+</dd><dt>Order-of-growth ("big <i>O</i>") notation
+</dt><dd>for measuring complexity (mainly worst-case time) - more next week
+</dd></dl>
+
+</div>
+</div>
+
+<h2>Correctness</h2>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+The first step is to distinguish two kinds of correctness:
+
+</p><div class="definition">
+<em>Total correctness</em>:
+for all inputs, the algorithm produces the desired result.
+</div>
+
+<p>
+This is what we want, but it can be hard to establish in one go,
+so we aim for something easier:
+
+</p><div class="definition">
+<em>Partial correctness</em>:
+<b>if</b> the algorithm terminates, it produces the desired result.
+</div>
+
+<p>
+As an extreme example, an algorithm that loops forever is a partially
+correct solution for any problem.
+</p><p>
+However, separating the two simplifies the problem, because partial correctness
+is easier to prove, and the time analysis we're planning will imply termination:
+</p><ul>
+<li>
+total correctness = partial correctness + termination
+</li><li>
+worst-case time analysis ⇒ termination
+</li></ul>
+
+</div>
+</div>
+
+<h3>What stays the same: loop invariants</h3>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+One of last week's exercises was to write an algorithm to find the
+value of the largest element of the array.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<div class="task">
+Step through the Largest algorithm:
+
+<canvas id="largest" width="500" height="210">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>
+<button onclick="largest.reset()">Reset</button>
+<button onclick="largest.step()">Single step</button>
+<button onclick="largest.bigStep()">Big step</button>
+<button onclick="largest.run()">Run</button>
+<button onclick="largest.stop()">Stop</button>
+
+</p></div>
+
+<p>
+In order to investigate this algorithm, it is useful to identify a
+key property of the loop:
+
+</p><div class="definition">
+A <em>loop invariant</em> is a property that holds before and after
+each execution of the loop (i.e. each time the execution reaches
+the WHILE line).
+
+</div>
+
+In this case, a property that holds for each row of the table at right.
+We add it to our description of the algorithm:
+
+<div class="pseudocode" id="Largest">
+<div class="codeheader">Largest(a[0..n-1])</div>
+<pre>max ← a[0]
+i ← 1
+</pre>
+<span class="invariant"><b>invariant:</b> 1 ≤ i ≤ n and max is largest of a[0] ... a[i-1]</span>
+<pre>WHILE i &lt; n
+        IF a[i] &gt; max
+                max ← a[i]
+        i ← i+1
+RETURN max
+</pre>
+</div>
+
+<script language="JavaScript">
+var largest = new CodeApplet("largest", "Largest", {a: [27, 14, 77, 85, 34]});
+
+getProcedure("Largest").cellColour = leftToRightColour("a", "i");
+</script>
+
+<p>
+The loop invariant is not executed; it is a comment.
+
+</p></div>
+<div class="unit-40">
+
+<p>
+Let's trace this algorithm on the sample array.
+The state consists of the array (which doesn't change here) and
+the variables <code>max</code> and <code>i</code>.
+We tabulate their values at each iteration:
+
+</p><center>
+<table>
+<tbody><tr><td></td><td>max</td><td>i</td></tr>
+<tr><td>On entering the loop</td><td>27</td><td>1</td></tr>
+<tr><td>After the first iteration</td><td>27</td><td>2</td></tr>
+<tr><td>After the second iteration</td><td>77</td><td>3</td></tr>
+<tr><td>After the third iteration</td><td>85</td><td>4</td></tr>
+<tr><td>On exiting the loop</td><td>85</td><td>5</td></tr>
+</tbody></table>
+</center>
+<p>
+and the final value of <code>max</code>, namely 85, is returned.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+In more detail, stating a loop invariant means we have to establish that
+property before the loop starts and at the end of the loop body,
+but it also gives us properties that hold at the start of the loop body
+and after the loop exits:
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<div class="pseudocode">
+<div class="codeheader">Largest(a[0..n-1])</div>
+<pre>max ← a[0]
+i ← 1
+</pre>
+<span class="precondition"><b>establish invariant:</b> 1 ≤ i ≤ n and max is largest of a[0] ... a[i-1]</span>
+<pre>WHILE i &lt; n
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="postcondition"><b>we have:</b> 1 ≤ i &lt; n and max is largest of a[0] ... a[i-1]</span>
+<pre>        IF a[i] &gt; max
+                max ← a[i]
+        i ← i+1
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="precondition"><b>establish:</b> 1 ≤ i ≤ n and max is largest of a[0] ... a[i-1]</span><br><br><br>
+<span class="postcondition"><b>we have:</b> i = n and max is largest of a[0] ... a[i-1]</span>
+<pre>RETURN max
+</pre>
+</div>
+
+and thus, in the case of the Largest algorithm, we know that after the loop,
+max is the largest of a[0] ... a[n-1].
+
+<p>
+In general:
+
+</p></div>
+<div class="unit-40">
+
+<center>
+<img src="./Iterative algorithms_files/robertfloyd.jpg" width="50%">
+</center>
+<p class="annotation">
+Robert Floyd introduced assertions and invariants in 1967.
+
+</p><div class="aside">
+You may have noticed that the idea of loop invariants
+is a form of mathematical induction.
+</div>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<div class="pseudocode">
+<br>
+<span class="precondition"><b>establish:</b> invariant</span>
+<pre>WHILE condition
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="postcondition"><b>we have:</b> invariant AND condition</span>
+<pre>        loop body
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="precondition"><b>establish:</b> invariant</span><br><br><br>
+<span class="postcondition"><b>we have:</b> invariant AND NOT condition</span><br><br>
+</div>
+
+<p>
+The invariant has to be true at the start and end of the body of the loop.
+It don't have to be true in the middle of the body
+(and often isn't, e.g. in the case of Largest).
+</p></div>
+
+<div class="unit-40">
+<div class="aside">
+This works even if the loop doesn't terminate,
+because we're only claiming partial correctness here.
+(But we'll establish termination later as a consequence
+of the complexity analysis.)
+</div>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Example: sequential search</h3>
+
+<p>
+Another of last week's exercises was an algorithm that takes an array
+and a value <code>x</code> and returns the index of the first occurrence
+of the value in the array, or <code>n</code> if the value is not present.
+Here's a simple version:
+
+</p><div class="pseudocode" id="SequentialSearch">
+<div class="codeheader">SequentialSearch(a[0..n-1], x)</div>
+<pre>i ← 0
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and x is not in a[0] ... a[i-1]</span>
+<pre>WHILE i &lt; n AND a[i] ≠ x
+        i ← i+1
+RETURN i
+</pre>
+</div>
+
+<script language="JavaScript">
+getProcedure("SequentialSearch").cellColour = leftToRightColour("a", "i");
+</script>
+
+<p>
+On exit from the loop, one of two things must be true:
+</p><ul>
+<li>i = n and x is not in the array, or
+</li><li>0 ≤ i &lt; n and a[i] = x and x is not in a[0] ... a[i-1]
+</li></ul>
+<p>
+so the algorithm is partially correct (and indeed totally correct).
+
+</p></div>
+</div>
+
+<div class="task">
+
+Try stepping through the above algorithm with the search key
+<input type="text" id="searchKey" size="2" value="77" onchange="sequentialSearch.setVar(&#39;x&#39;, Number(this.value))">:
+
+<canvas id="sequentialSearch" width="600" height="180">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>
+<button onclick="sequentialSearch.reset()">Reset</button>
+<button onclick="sequentialSearch.step()">Single step</button>
+<button onclick="sequentialSearch.bigStep()">Big step</button>
+<button onclick="sequentialSearch.run()">Run</button>
+<button onclick="sequentialSearch.stop()">Stop</button>
+
+</p><p>
+Try using a different search key.
+
+<script language="JavaScript">
+var sequentialSearch = new CodeApplet("sequentialSearch", "SequentialSearch",
+        {a: [27, 14, 77, 85, 34],
+	 x: Number(document.getElementById('searchKey').value)});
+</script>
+
+</p></div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Nested loops</h3>
+
+<p>
+Consider the problem of testing whether all the elements of an array
+are different.
+We'll need to go through all the elements, 
+For each element, we'll need to go through all the others and check
+that they're different from this one.
+That will require two loops, one inside the other.
+We place an invariant on each loop.
+
+</p></div>
+</div>
+
+<div class="pseudocode" id="AllDifferent">
+<div class="codeheader">AllDifferent(a[0..n-1])</div>
+<pre>i ← 1
+diff ← true
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and diff ≡ a[0] ... a[i-1] all different</span>
+<pre>WHILE i &lt; n
+        j ← 0
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and diff ≡ a[0] ... a[i-1] all different AND a[i] different from a[0] ... a[j-1]</span>
+<pre>        WHILE j &lt; i
+                IF a[j] = a[i]
+                        diff ← false
+                j ← j+1
+        i ← i+1
+RETURN diff
+</pre>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+Identifying the invariant on each loop is a good way of documenting
+the logic of an iterative algorithm.
+Working the other way round can also be a good way to design algorithms:
+identify the invariants first, and then write code that preserves them.
+We'll see some examples of this in future weeks.
+</p></div>
+</div>
+
+<div class="task">
+Step through the AllDifferent algorithm:
+
+<canvas id="allDifferent" width="500" height="270">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>
+<button onclick="allDifferent.reset()">Reset</button>
+<button onclick="allDifferent.step()">Single step</button>
+<button onclick="allDifferent.bigStep()">Big step</button>
+<button onclick="allDifferent.run()">Run</button>
+<button onclick="allDifferent.stop()">Stop</button>
+
+<script language="JavaScript">
+var allDifferent = new CodeApplet("allDifferent", "AllDifferent",
+        {a: [27, 14, 77, 27]});
+</script>
+
+</p></div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>What changes: loop control variables</h3>
+
+<p>
+Consider the algorithm Largest again:
+
+</p><div class="pseudocode">
+<div class="codeheader">Largest(a[0..n-1])</div>
+<pre>max ← a[0]
+i ← 1
+</pre>
+<span class="invariant"><b>invariant:</b> 1 ≤ i ≤ n and max is largest of a[0] ... a[i-1]</span>
+<pre>WHILE i &lt; n
+        IF a[i] &gt; max
+                max ← a[i]
+        i ← i+1
+RETURN max
+</pre>
+</div>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+The variable <code>i</code> here has a special role:
+it keeps track of our progress towards exiting the loop.
+
+</p><div class="definition">
+<p>
+A <em>loop control variable</em> is variable that is
+</p><ul>
+<li>initialized before the loop starts
+</li><li>used in the test whether to continue looping
+</li><li>modified in the body of the loop
+</li></ul>
+</div>
+
+</div>
+
+<div class="unit-40">
+<div class="aside">
+We can usually specify an upper bound on the number of remaining iterations
+as a function of the value of the loop control variable.
+In the case of Largest, the number of iterations remaining is n-i.
+</div>
+</div>
+
+</div>
+
+<p>
+Recall the AllDifferent algorithm,
+with one loop nested inside another:
+
+</p><div class="pseudocode">
+<div class="codeheader">AllDifferent(a[0..n-1])</div>
+<pre>i ← 1
+diff ← true
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and diff ≡ a[0] ... a[i-1] all different</span>
+<pre>WHILE i &lt; n
+        j ← 0
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and diff ≡ a[0] ... a[i-1] all different AND a[i] different from a[0] ... a[j-1]</span>
+<pre>        WHILE j &lt; i
+                IF a[j] = a[i]
+                        diff ← false
+                j ← j+1
+        i ← i+1
+RETURN diff
+</pre>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+Here <code>i</code> is the control variable for the outer loop,
+and <code>j</code> is the control variable for the inner one.
+Keeping these separate makes it easier to work out when the loops
+will terminate.
+
+</p><p>
+Good practice, for clear code:
+</p><ul>
+<li>Do not modify a loop control variable in an inner loop.
+</li><li>Modify the loop control variable in as few places as possible.
+</li></ul>
+
+<p>
+The following form is very common:
+
+</p><div class="pseudocode">
+<pre>i ← A
+WHILE i &lt; B
+        other stuff
+        i ← i+1
+</pre>
+</div>
+
+<p>
+Many languages support this special case directly,
+e.g. in languages of the C family (including C++, Java and C#),
+this is written <code>for (i = A; i &lt; B; i++) ...</code>
+
+</p><p>
+We shall stick with the more general and flexible WHILE form.
+
+</p></div>
+
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h2>Analysing algorithms</h2>
+
+<p>
+We want to measure the number of steps taken by the algorithm
+(usually in the worst case) as a function of the input size.
+So we need to consider
+</p><ul>
+<li> how to measure the size of the input to the algorithm.
+</li><li> what a fundamental step for the algorithm is.
+</li><li> what input gives the most number of steps (the worst case).
+</li></ul>
+<p>
+Then we will want to compare the rates of growth of different functions.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Input size</h3>
+<p>
+The input size is usually straightforward to
+decide upon, by simply working out what aspect of the input is used
+in the algorithm.
+For example,
+</p><ul>
+<li> an array of n elements has size n
+(with an algorithm where the fundamental
+steps involve elements of the list).
+</li><li> the size of a graph might be the number of nodes or edges, or both.
+</li><li> the size of a logical formula might be the number of variables,
+or the number of connectives.
+</li></ul>
+<p>
+Some work uses the number of bits in the input.
+
+</p><h3>Counting steps</h3>
+
+<p>
+To work out the number of steps an algorithm
+may take (given an input of size n):
+</p><ul>
+<li> identify the fundamental step the algorithm;
+</li><li> set up a mathematical formula describing the
+number of times this step occurs – this
+should depend on (if anything) the size of the
+input;
+</li><li> manipulate this to establish a succinct
+description of the number of steps.
+</li></ul>
+
+</div>
+
+<div class="unit-40">
+<center>
+<img src="./Iterative algorithms_files/graph.png">
+</center>
+<p class="annotation">
+A graph in the sense of graph theory
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Comparing cost functions</h3>
+
+<p>
+If we have reduced the costs of two algorithms to cost functions f(n) and g(n),
+we wish to compare these.
+Smaller cost is better, but we are most concerned with the costs for large
+input size <i>n</i>.
+
+</p><p>
+In the graph at right, note that n<sup>2</sup> eventually overtakes
+c*n for any constant c.
+We say that n<sup>2</sup> <em>dominates</em> c*n.
+Similarly, n<sup>3</sup> dominates c*n<sup>2</sup>, and so on.
+
+</p></div>
+
+<div class="unit-40">
+<img src="./Iterative algorithms_files/constant-factors.svg">
+<p class="annotation">
+n<sup>2</sup> = n*n eventually overtakes c*n for any constant c.
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Order-of-growth notation</h3>
+
+<p>
+We take a simplified view of a cost function, restricting our attention
+to the term that grows fastest for large inputs, and ignoring constant
+factors.
+Thus we might say that the worst-case complexity of some algorithm is
+O(n<sup>2</sup>), meaning that for large inputs its cost function
+<i>f(n)</i> grows no faster than n<sup>2</sup>.
+How large?  as large as you like.
+
+</p><p>
+We'll cover the formal definition of big-O notation in week 4,
+but for polynomial functions the complexity class is quite easy to work out:
+</p><ul>
+<li>1, 23 and 1,000,000 are all O(1)
+</li><li>5<span class="changed">n</span> + 4 is O(n)
+</li><li>20<span class="changed">n<sup>2</sup></span> + 56n + 478 is O(n<sup>2</sup>)
+</li><li>5<span class="changed">n<sup>3</sup></span> - 34n<sup>2</sup> + 7n + 1002 is O(n<sup>3</sup>)
+</li><li> and so on
+</li></ul>
+<p>
+In general, a polynomial function (like these) belongs to O(n<sup>k</sup>)
+where k is the largest power of n that occurs.
+(In week 4 we'll consider other functions.)
+
+</p><p>
+The simplified big-O form has a number of properties that make it easy
+to calculate with, as we'll see in later weeks.
+For now, we'll consider some polynomial examples.
+</p></div>
+
+<div class="unit-40">
+<img src="./Iterative algorithms_files/polynomials.svg">
+<p class="annotation">
+Graphs of some polynomial functions.
+The asymptotic rate of growth increases with the power k.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Example: select a random element</h3>
+<p>
+This (rather simple) algorithm selects a random element
+from an array of length <i>n</i>:
+
+</p><div class="pseudocode">
+<div class="codeheader">RandomElement(a[0..n-1])</div>
+<pre>i ← random number between 0 and n-1
+RETURN a[i]
+</pre>
+</div>
+
+<ul>
+<li> This algorithm has input of size n, the length of the array.
+</li><li> The basic step is an array lookup.
+</li><li> The number of steps taken by this algorithm is always 1.
+</li></ul>
+
+<p>
+Thus the complexity of this algorithm is O(1),
+i.e. <em>constant</em> time.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Example: analysis of sequential search</h3>
+
+<p>
+Consider the sequential search algorithm:
+
+</p><div class="pseudocode">
+<div class="codeheader">SequentialSearch(a[0..n-1], x)</div>
+<pre>i ← 0
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and x is not in a[0] ... a[i-1]</span>
+<pre>WHILE i &lt; n AND a[i] ≠ x
+        i ← i+1
+RETURN i
+</pre>
+</div>
+
+<p>
+For the input size, we'll use the size of the array, <i>n</i>.
+The steps we'll count are the comparisons of the array elements with
+<code>x</code>.
+(We could also count array accesses; in this case it would give exactly the
+same answer.)
+Now the number of steps executed by the algorithm varies for different inputs
+of the same length:
+</p><ul>
+<li>The worst case occurs when <code>x</code> is not in the array.
+The algorithm compares it with all the elements, i.e. <i>n</i> steps.
+</li><li>The best case occurs when <code>x</code> occurs as the first element
+of the array, so only one comparison is executed.
+</li><li>If the first <code>x</code> occurs at a random position in the array,
+the algorithm takes between 1 and <i>n</i> steps, with an average of
+(<i>n</i>+1)/2.
+</li></ul>
+
+</div>
+
+<div class="unit-40">
+Consider a sequential search on this array of 5 elements:
+
+<center>
+<table class="array">
+<tbody><tr>
+<td></td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>a</td>
+<td class="cell">27</td>
+<td class="cell">14</td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+</tr>
+</tbody></table>
+</center>
+
+<ul>
+<li> Searching for 27 (the best case), requires one comparison.
+</li><li> Searching for 14 requires 2 comparisons.
+</li><li> Searching for 77 requires 3 comparisons.
+</li><li> Searching for 85 requires 4 comparisons.
+</li><li> Searching for 34 requires 5 comparisons.
+</li><li> Searching for anything not in the array (the worst case)
+requires 5 comparisons.
+</li></ul>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+Thus the worst-case complexity of sequential search is O(n),
+or <em>linear</em> time.
+The average case time when the value is present is also O(n).
+
+</p><h3>Example: analysis of AllDifferent</h3>
+
+<p>
+Recall the algorithm for determining whether all the elements of
+an array are different:
+
+</p></div>
+
+<div class="unit-40">
+<div class="aside">
+One effect of the big-O abstraction is that our choice of input size and step
+becomes less important.
+For example, we can count assignments, array accesses or comparisons,
+and still end up with the same answer.
+</div>
+
+</div>
+</div>
+
+<div class="pseudocode">
+<div class="codeheader">AllDifferent(a[0..n-1])</div>
+<pre>i ← 1
+diff ← true
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and diff ≡ a[0] ... a[i-1] all different</span>
+<pre>WHILE i &lt; n
+        j ← 0
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ n and diff ≡ a[0] ... a[i-1] all different AND a[i] different from a[0] ... a[j-1]</span>
+<pre>        WHILE j &lt; i
+                IF a[j] = a[i]
+                        diff ← false
+                j ← j+1
+        i ← i+1
+RETURN diff
+</pre>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+Again we'll use the size <i>n</i> of the array as the input size,
+and count comparisons.
+This algorithm compares each of the <i>n</i> elements with the <i>n</i>-1
+other elements, but it only compares each pair once,
+so it requires <i>n</i>(<i>n</i>-1)/2 comparisons,
+that is <i>n</i><sup>2</sup>/2 - <i>n</i>/2.
+This function is O(<i>n</i><sup>2</sup>),
+or <em>quadratic</em> time.
+</p></div>
+
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Complexity classes</h3>
+
+<p>
+We classify algorithms according to the order of their cost function:
+</p><dl>
+<dt>O(1) Constant
+</dt><dd>The algorithm always takes the
+same amount of time (which is very good).
+Occurs only in cases of rare good fortune, e.g. first element.
+
+</dd><dt>O(n) Linear
+</dt><dd>Time taken grows in direct proportion to input size (good/OK).
+Typically for problems requiring a limited number of passes over the input,
+e.g. sequential search.
+Any algorithm that examines all its input must take at least linear time.
+
+</dd><dt>O(n<sup>2</sup>) Quadratic
+</dt><dd>The time taken grows in proportion to the square
+of the input size (OK/bad).
+This often occurs with algorithms involving two nested loops,
+e.g. AllDifferent, or the sorting methods we'll be discussing next week.
+
+</dd><dt>O(n<sup>3</sup>) Cubic
+</dt><dd>The time taken grows in proportion to the cube
+of the input size (not so good).
+This often occurs with algorithms involving three nested loops,
+e.g. naive multiplication of <i>n</i>-by-<i>n</i> matrices.
+
+</dd><dt>O(n<sup>k</sup>) Polynomial (general case of the above)
+</dt><dd>This is the limit of what is usually considered "feasible",
+though it can be very expensive for larger <i>k</i>.
+Some algorithms and problems are even worse.
+</dd></dl>
+
+<p>
+We'll consider other classes in later weeks.
+
+</p></div>
+</div>
+
+<hr noshade="" size="1">
+
+</div>  <!-- End of soiContent -->
+</div> <!-- end of page -->
+
+
+
+</body></html>
