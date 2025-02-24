@@ -12,8 +12,4 @@ public class GameView extends UserView {
         super(w, width, height);
         bg=new ImageIcon("data/university.gif").getImage();
     }
-   @Override
-    public void paint(Graphics g) {
-        g.drawImage(bg,0,0,getWidth(),getHeight(),this);
-    }
-}
+  }
