@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<!-- saved from url=(0088)https://moodle4.city.ac.uk/pluginfile.php/885212/mod_resource/content/7/notes/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script id="f5_cspm">(function(){var f5_cspm={f5_p:'HMHJJFIHGOKDHIAFDJGOOJIKOJBEGDIKAILIPIMDOJDJOMEICCEDLPODJBPLAOOCNLKBAMJPAANAICFLJEIAOJDKAALPEFJHICOBBFAHGGAECFBMAOPAPANPLPLMOJLG',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0139236398aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>
+
+<link rel="stylesheet" type="text/css" href="./Introducing sorting algorithms_files/moodle-custom-styles.css">
+<link rel="stylesheet" type="text/css" href="./Introducing sorting algorithms_files/kube.min.css">
+<link rel="stylesheet" type="text/css" href="./Introducing sorting algorithms_files/master.css">
+<link rel="stylesheet" type="text/css" href="./Introducing sorting algorithms_files/algorithms.css">
+<link href="./Introducing sorting algorithms_files/css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./Introducing sorting algorithms_files/applet.js.download"></script>
+<script type="text/javascript" src="./Introducing sorting algorithms_files/bararray.js.download"></script>
+<script type="text/javascript" src="./Introducing sorting algorithms_files/codeapplet.js.download"></script>
+
+<title>Introducing sorting algorithms</title>
+</head>
+
+<body style="font-size: 100%; ">
+<div id="page">
+<div class="soiContent">
+
+<h1>Introducing sorting algorithms</h1>
+
+<p>
+In this session, we'll introduce algorithms for the problem of sorting,
+or re-arranging the elements of a collection in order.
+We'll consider two simple O(n<sup>2</sup>) algorithms in detail:
+</p><ul>
+<li>Selection sort
+</li><li>Insertion sort
+</li></ul>
+<p>
+You will need to be able to demonstrate the operation of these algorithms
+on sample inputs, and also to describe their properties.
+</p><p>
+In week 7 we'll consider more efficient approaches.
+However the simple approaches may be preferred for small inputs.
+
+</p><h2>Revision: asymptotic complexity (big-O)</h2>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+Working out the order of a sum of different powers of <i>n</i> is simply
+a matter of discarding all but the highest power of <i>n</i>,
+and ignoring the constant in front:
+</p><ul>
+<li> 14 is O(1): constant
+</li><li> 3n<sup>2</sup> + 26 is O(n<sup>2</sup>): quadratic
+</li><li> n<sup>3</sup> + 4n<sup>2</sup> is O(n<sup>3</sup>): cubic
+</li></ul>
+
+<p>
+However this function is more tricky:
+</p><p class="formula">
+n + (n-1) + (n-2) + ... + 2 + 1
+
+</p><p>
+As can be seen from the plot of this function at right, it isn't O(n).
+If it were, all the points would be on a straight line.
+
+</p><p>
+There are several ways to work out this sum.
+One method is to look at it graphically, in terms of the area covered
+by blocks of length n, n-1, etc.
+We can simplify the problem by putting the sum together with a copy,
+flipped vertically:
+
+</p><center>
+<table class="array">
+<tbody><tr><td style="text-align:center" class="cell" colspan="10">n</td><td style="text-align:center" class="sortedcell" colspan="1" width="8%">1</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="9">n-1</td><td style="text-align:center" class="sortedcell" colspan="2" width="16%">2</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="8">n-2</td><td style="text-align:center" class="sortedcell" colspan="3" width="24%">3</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="7">...</td><td style="text-align:center" class="sortedcell" colspan="4" width="32%">...</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="6">...</td><td style="text-align:center" class="sortedcell" colspan="5" width="40%">...</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="5">...</td><td style="text-align:center" class="sortedcell" colspan="6" width="48%">...</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="4">...</td><td style="text-align:center" class="sortedcell" colspan="7" width="56%">...</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="3">3</td><td style="text-align:center" class="sortedcell" colspan="8" width="64%">n-2</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="2">2</td><td style="text-align:center" class="sortedcell" colspan="9" width="72%">n-1</td></tr>
+<tr><td style="text-align:center" class="cell" colspan="1" width="8%">1</td><td style="text-align:center" class="sortedcell" colspan="10" width="80%">n</td></tr>
+</tbody></table>
+</center>
+
+<p>
+This block is n+1 wide and n high, so it has an area of n*(n+1),
+and our original sum is half that:
+
+</p><p align="center">
+n + (n-1) + (n-2) + ... + 2 + 1 = n*(n+1)/2 = n<sup>2</sup>/2 + n/2
+
+</p><p>
+which is O(n<sup>2</sup>).
+
+</p><p>
+Alternatively, since we're only worrying about the order of growth,
+we could observe that there are n numbers, none larger than n, so
+
+</p><p align="center">
+n + (n-1) + (n-2) + ... + 2 + 1 ≤ n<sup>2</sup>
+
+</p><p>
+Also, we know that half of them are at least n/2, so
+
+</p><p align="center">
+n<sup>2</sup>/4 ≤ n + (n-1) + (n-2) + ... + 2 + 1
+
+</p><p>
+so the sum lies between two functions that are both O(n<sup>2</sup>),
+so it is also O(n<sup>2</sup>).
+
+</p></div>
+
+<div class="unit-40">
+<table>
+<tbody><tr>
+<th>n</th>
+<th>n + (n-1) + (n-2) + ... + 2 + 1</th>
+</tr>
+<tr><td>1</td><td>1</td></tr>
+<tr><td>2</td><td>3</td></tr>
+<tr><td>3</td><td>6</td></tr>
+<tr><td>4</td><td>10</td></tr>
+<tr><td>5</td><td>15</td></tr>
+<tr><td>6</td><td>21</td></tr>
+</tbody></table>
+
+<img src="./Introducing sorting algorithms_files/triangle.svg">
+<p class="annotation" align="center">
+Plot of n + (n-1) + (n-2) + ... + 2 + 1
+</p></div>
+</div>
+
+<h2>Sorting</h2>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+In computing, "sorting" means re-arranging the elements of a collection
+into ascending (or descending) order, according to some notion of ordering
+(for example, alphabetic or numeric).
+That is, given an array
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr>
+<tr>
+<td>a</td>
+<td class="cell">27</td>
+<td class="cell">14</td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</center>
+
+<p>
+we want to re-arrange the elements to
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td>
+<td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">34</td>
+<td class="sortedcell">58</td>
+<td class="sortedcell">77</td>
+<td class="sortedcell">85</td>
+</tr>
+</tbody></table>
+</center>
+
+<p>
+Formally, we want a re-arrangement
+(a <em>permutation</em> in mathematical terminology)
+of the original elements that is <em>ordered</em>:
+
+</p><p align="center" style="font-size: 125%">
+a[0] ≤ a[1] ≤ a[2] ≤ ... ≤ a[n-2] ≤ a[n-1]
+
+</p><p>
+Sorting is a fundamental computing task.
+</p><ul>
+<li> We may sort data for presentation to users,
+e.g. phone books, directory listings, indexes of books.
+</li><li> Sorting is an important building-block in larger algorithms,
+because it simplifies tasks such as searching for a particular key
+or detecting duplicates.
+</li></ul>
+
+<p>
+Sort keys can be numbers, strings, anything that has an ordering.
+We'll use numbers in our examples but be careful to distinguish
+an array index <code>i</code> from the value <code>a[i]</code>
+at that location.
+
+</p><h3>Evaluating sorting algorithms</h3>
+
+<ul>
+<li>How much space does the algorithm require,
+in addition to the original array?
+At best this will be O(1), but some algorithms achieve faster times by
+using more memory (space-time trade-off).
+
+</li><li>How much time does it take?
+We shall count comparison operations, and consider both average and worst case.
+
+</li><li>Does the algorithm perform better on sorted inputs?
+
+<div class="definition">
+An <strong>adaptive sort</strong> is one that performs better on partially
+sorted inputs, and takes O(n) time on sorted or almost-sorted inputs.
+</div>
+
+<p>
+This can be useful in some applications.
+
+</p></li><li>What happens if there are repeated keys?
+
+<div class="definition">
+A <strong>stable sort</strong> is one that preserves the relative ordering
+of elements that compare as equal.
+</div>
+
+<p>
+This is a useful property, e.g. we can sort people by first name,
+and then sort by surname, and get them in surname, first name order.
+
+</p><p>
+We can make any algorithm stable by including the original position in the
+sort, but this costs O(n) space and extra time.
+
+</p></li></ul>
+
+</div>
+
+<div class="unit-40">
+<center>
+<img src="./Introducing sorting algorithms_files/index.jpg">
+</center>
+
+<p>&nbsp;
+
+</p><center>
+<img src="./Introducing sorting algorithms_files/contacts.png" width="60%">
+</center>
+</div>
+</div>
+
+<h2>Selection sort</h2>
+
+<p>
+The idea of selection sort is to build up a collection of the smallest elements,
+in order, at the start of the array.
+To add a new element to this collection, find the smallest in what's left,
+and swap it with the first element after our position.
+
+</p><div class="task">
+To get a feel for the process, try to apply the above strategy as
+mechanically as you can to sort the array below using the applet below.
+This is a modification of the applet from week 1,
+with the initial subarray of least elements in grey.
+You will always be swapping with the next element.
+<ul>
+<li>
+Click on the least element in the remaining part to swap it with the
+first element in that part (which may be the same element).
+The collection of smallest elements on the left will then grow by one.
+</li><li>
+Pressing <button onclick="selectionSortBars.reset()">Reset</button>
+re-shuffles the array.
+</li></ul>
+<canvas id="selectionSortBars" width="480" height="240">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>
+Notice that after we select the second-last element,
+there is no need to select the last one, as it must be the biggest.
+</p></div>
+
+<script type="text/javascript">
+var selectionSortBars = new BarArrayApplet("selectionSortBars", 16);
+selectionSortBars.changed = function() {
+	var least = initLeast(this.array);
+	if (least < this.done.count || this.done.count == this.array.length-1) {
+		this.done.count = least;
+	}
+	this.redraw();
+};
+selectionSortBars.changed();
+selectionSortBars.clickElement = function(pos) {
+	if (this.done.count < this.array.length) {
+		swap(this.array, this.done.count, pos);
+		this.done.count++;
+	}
+};
+</script>
+
+<p>
+Now let's recast that as a high-level description of the algorithm,
+leaving the detail of how we find the smallest remaining element till later:
+
+</p><div class="pseudocode">
+<div class="codeheader">SelectionSort(a[0..n-1])</div>
+<pre>i ← 0
+</pre>
+<span class="invariant"><b>invariant:</b> a[0..i-1] contains the i smallest elements in ascending order</span>
+<pre>WHILE i &lt; n-1
+        min ← index of the smallest element in a[i..n-1]
+        Swap(a, i, min)
+        i ← i+1
+</pre>
+</div>
+
+<p>
+On termination of the loop, we have i = n-1, so a[0..n-2] contains the n-1
+smallest elements in ascending order.
+Therefore the remaining element a[n-1] must be at least a big as those,
+so the whole array is in order.
+
+</p><h3>Example</h3>
+
+<p>
+Let's work through the operation of this algorithm on a sample array.
+We consider consider the state of the array between iterations of the
+outer loop.
+
+</p><table>
+
+<tbody><tr><td>
+i&nbsp;=&nbsp;0
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="cell">27</td>
+<td class="cell">14</td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The smallest element is 14, at position 1,
+so we need to swap that to position 0.
+</td></tr>
+
+<tr><td>
+i = 1
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell"><span class="changed">14</span></td>
+<td class="cell"><span class="changed">27</span></td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next smallest element is 16, at position 5,
+so we need to swap that to position 1.
+</td></tr>
+
+<tr><td>
+i = 2
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell"><span class="changed">16</span></td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell"><span class="changed">27</span></td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next smallest element is 27, which we just moved to position 5.
+Now we need to swap it down to position 2.
+</td></tr>
+
+<tr><td>
+i = 3
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell"><span class="changed">27</span></td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell"><span class="changed">77</span></td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next smallest element is 34, which is at position 4.
+We need to swap it down to position 3.
+</td></tr>
+
+<tr><td>
+i = 4
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell"><span class="changed">34</span></td>
+<td class="cell"><span class="changed">85</span></td>
+<td class="cell">77</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next smallest element is 58, which is at position 6.
+We need to swap it down to position 4.
+</td></tr>
+
+<tr><td>
+i = 5
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">34</td>
+<td class="sortedcell"><span class="changed">58</span></td>
+<td class="cell">77</td>
+<td class="cell"><span class="changed">85</span></td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next smallest element is 77, which is already at position 5,
+so we leave it there.
+</td></tr>
+
+<tr><td>
+i = 6
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">34</td>
+<td class="sortedcell">58</td>
+<td class="sortedcell"><span class="changed">77</span></td>
+<td class="cell">85</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+We have reached n-1, so we exit the loop.
+The last remaining element must be at least as large as those we've collected,
+so the whole array is now ordered.
+</td></tr>
+
+<tr><td>
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">34</td>
+<td class="sortedcell">58</td>
+<td class="sortedcell">77</td>
+<td class="sortedcell">85</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+</td></tr>
+
+</tbody></table>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Finding the smallest element</h3>
+
+<p>
+To complete the algorithm, we need to spell out the line
+</p><div class="pseudocode">
+<pre>min ← index of the smallest element in a[i..n-1]
+</pre>
+</div>
+
+<p>
+This is similar to the maximum exercise from week 1:
+
+</p><div class="pseudocode">
+<pre>min ← i
+j ← i+1
+</pre>
+<span class="invariant"><b>invariant:</b> min is the index of the smallest element in a[i..j-1]</span>
+<pre>WHILE j &lt; n
+        IF a[j] &lt; a[min]
+                min ← j
+        j ← j+1
+</pre>
+</div>
+
+<p>
+When we reach the end of the loop j = n, so the invariant tells us that
+<code>min</code> is the index of the smallest element in a[i..n-1],
+and this is the position we want to swap with <code>i</code>.
+It could be that min = i, in which case the swap is unnecessary but harmless.
+
+</p><p>
+Plugging this into the top-level loop gives the complete algorithm:
+
+</p></div>
+</div>
+
+<div class="pseudocode" id="SelectionSort">
+<div class="codeheader">SelectionSort(a[0..n-1])</div>
+<pre>i ← 0
+</pre>
+<span class="invariant"><b>invariant:</b> a[0..i-1] contains the i smallest elements in ascending order</span>
+<pre>WHILE i &lt; n-1
+        min ← i
+        j ← i+1
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="invariant"><b>invariant:</b> min is the index of the smallest element in a[i..j-1]</span>
+<pre>        WHILE j &lt; n
+                IF a[j] &lt; a[min]
+                        min ← j
+                j ← j+1
+        Swap(a, i, min)
+        i ← i+1
+</pre>
+</div>
+
+<script language="JavaScript">
+getProcedure("SelectionSort").cellColour = leftToRightColour("a", "i");
+</script>
+
+<p>
+Here <code>i</code> is the control variable for the outer loop,
+while <code>j</code> is the control variable for the inner one.
+
+</p><div class="task">
+Step through the working of selection sort:
+
+<canvas id="selectionSort" width="600" height="270">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<button onclick="selectionSort.reset()">Reset</button>
+<button onclick="selectionSort.step()">Single step</button>
+<button onclick="selectionSort.bigStep()">Big step</button>
+<button onclick="selectionSort.run()">Run</button>
+<button onclick="selectionSort.stop()">Stop</button>
+</div>
+
+<script language="JavaScript">
+var selectionSort = new CodeApplet("selectionSort", "SelectionSort",
+	{a: [27, 14, 77, 85, 34, 16, 58]});
+</script>
+
+<h3>Evaluation of selection sort</h3>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+Selection sort uses O(1) extra space, for several temporary variables.
+
+</p><p>
+The time complexity can by seen from the structure of the loops,
+as shown at right.
+Whatever data is in the array, selection sort does
+(n-1) + (n-2) + ... + 3 + 2 + 1 comparisons.
+We know from an earlier calculation that this is n*(n-1)/2,
+which is O(n<sup>2</sup>).
+
+</p><p>
+This also means that selection sort is not an adaptive sort.
+
+</p><p>
+The swap operation can change the order of equal elements,
+so selection sort is not a stable sort.
+
+</p></div>
+
+<div class="unit-40">
+<div class="pseudocode">
+<div class="codeheader">SelectionSort(a[0..n-1])</div>
+<pre>i ← 0
+WHILE i &lt; n-1
+        ...
+        j ← i+1
+        WHILE j &lt; n
+                ... comparison ...
+                j ← j+1
+        ...
+        i ← i+1
+</pre>
+</div>
+</div>
+
+</div>
+
+<div class="aside">
+<p>
+There are some obvious inefficiencies in selection sort,
+which point the way to better algorithms:
+</p><ul>
+<li>
+The swap operation moves a small element down,
+but it moves a more-or-less random element up.
+Sometimes it moves a fairly small element up, and later moves it down again.
+The quicksort algorithm (week 7) also uses swaps over long distances,
+but it always moves a large element up at the same time as it moves a small
+one down.
+</li><li>
+Selection sort has to search through the whole remainder of the array
+to find the least element.
+Heapsort speeds this up with a clever organization of the rest of the array
+called a <em>heap</em>
+(which you'll meet next year in Data Structures and Algorithms).
+</li></ul>
+</div>
+
+<h2>Insertion sort</h2>
+
+<p>
+Insertion sort operates by building an ordered sub-array on the left,
+expanding it by inserting each element from the unsorted portion into
+its appropriate place in the ordered sub-array.
+
+</p><div class="task">
+To get a feel for the process, try to apply the above strategy as
+mechanically as you can to sort the array below using the applet below.
+This is also a modification of the applet from week 1,
+with the initial subarray of ordered elements in grey.
+<ul>
+<li>
+At each stage, you must indicate (by clicking on a position)
+where the next element should be moved to
+in order to insert it into the sorted portion of the array.
+This may be one of the positions to its left, or its current position.
+Inserting the element will entail moving the intervening elements
+to make room for the element being moved.
+</li><li>
+Pressing <button onclick="insertionSortBars.reset()">Reset</button>
+re-shuffles the array.
+</li></ul>
+<canvas id="insertionSortBars" width="480" height="240">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<p>
+Note that the process starts with the first element by itself already ordered,
+so the first element we have to insert is the second one in the array.
+</p></div>
+
+<script language="JavaScript">
+var insertionSortBars = new BarArrayApplet("insertionSortBars", 16);
+insertionSortBars.changed = function() {
+	var ordered = initOrdered(this.array);
+	if (this.done.count == 0) {
+		this.done.count = 1;
+	}
+	if (ordered < this.done.count) {
+		this.done.count = ordered;
+	}
+	this.redraw();
+};
+insertionSortBars.changed();
+insertionSortBars.clickElement = function(pos) {
+	if (this.done.count < this.array.length) {
+		move(this.array, this.done.count, pos);
+		this.done.count++;
+	}
+};
+</script>
+
+<p>
+Here's a high-level description of this strategy, leaving the detail of how
+we do the insertion till later:
+
+</p><div class="pseudocode">
+<div class="codeheader">InsertionSort(a[0..n-1])</div>
+<pre>i ← 1
+</pre>
+<span class="invariant"><b>invariant:</b> a[0..i-1] in ascending order</span>
+<pre>WHILE i &lt; n
+        insert a[i] in place in a[0..i-1]
+        i ← i+1
+</pre>
+</div>
+
+<p>
+Notice that we start with i = 1, because the sub-array consisting of just
+the first element a[0] is trivially ordered.
+On termination of the loop, i = n, so a[0..n-1] is in order.
+
+</p><h3>Example</h3>
+
+<p>
+Let's use this algorithm to sort this array:
+
+</p><table>
+
+<tbody><tr><td>
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="cell">27</td>
+<td class="cell">14</td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The sub-array consisting of the first element is trivially ordered.
+</td></tr>
+
+<tr><td>
+i&nbsp;=&nbsp;1
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell"><span class="changed">27</span></td>
+<td class="cell">14</td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+To extended the ordered sub-array, we must insert 14,
+by moving 27 to the right.
+</td></tr>
+
+<tr><td>
+i = 2
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell"><span class="changed">14</span></td>
+<td class="sortedcell"><span class="changed">27</span></td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next number 77 is already larger than the numbers so far,
+so we can leave it where it is.
+</td></tr>
+
+<tr><td>
+i = 3
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell"><span class="changed">77</span></td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+Again the next number 85 is already larger than the numbers so far,
+so we can leave it where it is.
+</td></tr>
+
+<tr><td>
+i = 4
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">77</td>
+<td class="sortedcell"><span class="changed">85</span></td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+To extended the ordered sub-array, we must insert 34,
+by moving 77 and 85 to the right.
+</td></tr>
+
+<tr><td>
+i = 5
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell"><span class="changed">34</span></td>
+<td class="sortedcell"><span class="changed">77</span></td>
+<td class="sortedcell"><span class="changed">85</span></td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+To extended the ordered sub-array, we must insert 16,
+by moving four numbers to the right.
+</td></tr>
+
+<tr><td>
+i = 6
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell"><span class="changed">16</span></td>
+<td class="sortedcell"><span class="changed">27</span></td>
+<td class="sortedcell"><span class="changed">34</span></td>
+<td class="sortedcell"><span class="changed">77</span></td>
+<td class="sortedcell"><span class="changed">85</span></td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+To extended the ordered sub-array, we must insert 58,
+by moving 77 and 85 to the right.
+</td></tr>
+
+<tr><td>
+i = 7
+</td><td>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">34</td>
+<td class="sortedcell"><span class="changed">58</span></td>
+<td class="sortedcell"><span class="changed">77</span></td>
+<td class="sortedcell"><span class="changed">85</span></td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+We have reached the end of the array, and now the whole array is ordered.
+</td></tr>
+
+</tbody></table>
+
+<h3>Insertion</h3>
+
+<p>
+To complete the algorithm, we need to flesh out the step
+</p><div class="pseudocode">
+<pre>insert a[i] in place in a[0..i-i]
+</pre>
+</div>
+The idea is to search backward from position i for the right position.
+As we search, we move the elements greater than <code>a[i]</code>
+that we encounter one place to the right.
+Then when we find the place where <code>a[i]</code> belongs,
+we will have a slot to put it in.
+
+<p>
+Consider the situation when i = 4:
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">77</td>
+<td class="sortedcell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</center>
+
+<p>
+We want to move the elements of the sorted sub-array that are larger
+than a[i] = 34, namely 77 and 85, to the right so we can slot in the value 34.
+To do this, we need to save a[i] in a temporary variable:
+
+</p><table>
+
+<tbody><tr><td>
+j&nbsp;=&nbsp;4
+</td><td>
+<table class="array">
+<tbody><tr>
+<td colspan="4"></td>
+<td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>tmp</td>
+<td class="cell"><span class="changed">34</span></td>
+<td></td>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">77</td>
+<td class="sortedcell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+85 is larger than 34, so copy it to the right.
+</td></tr>
+
+<tr><td>
+j = 3
+</td><td>
+<table class="array">
+<tbody><tr>
+<td colspan="4"></td>
+<td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>tmp</td>
+<td class="cell">34</td>
+<td></td>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">77</td>
+<td class="cell">85</td>
+<td class="sortedcell"><span class="changed">85</span></td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+Similarly, 77 is larger than 34, so copy it to the right.
+</td></tr>
+
+<tr><td>
+j = 2
+</td><td>
+<table class="array">
+<tbody><tr>
+<td colspan="4"></td>
+<td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>tmp</td>
+<td class="cell">34</td>
+<td></td>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="cell">77</td>
+<td class="sortedcell"><span class="changed">77</span></td>
+<td class="sortedcell">85</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+The next element 27 isn't larger than 34, so exit the loop and copy <code>tmp</code>
+to <code>a[j]</code>.
+</td></tr>
+
+<tr><td>
+</td><td>
+<table class="array">
+<tbody><tr>
+<td colspan="4"></td>
+<td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>tmp</td>
+<td class="cell">34</td>
+<td></td>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell"><span class="changed">34</span></td>
+<td class="sortedcell">77</td>
+<td class="sortedcell">85</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</td><td style="vertical-align: bottom">
+</td></tr>
+
+</tbody></table>
+
+<p>
+Here is the pseudocode to do the insertion:
+
+</p><div class="pseudocode">
+<pre>tmp ← a[i]
+j ← i
+</pre>
+<span class="invariant"><b>invariant:</b> a[0..j-1], a[j+1..i] in ascending order and tmp &lt; a[j+1..i]</span>
+<pre>WHILE j &gt; 0 AND a[j-1] &gt; tmp
+        a[j] ← a[j-1]
+        j ← j-1
+a[j] ← tmp
+</pre>
+</div>
+
+<p>
+At the end of the loop, all the positions a[j+1..i] are larger
+than <code>tmp</code>, and either
+</p><ul>
+<li>
+j = 0, so copying <code>tmp</code> to a[0] leaves a[0..i] in order, or
+</li><li>
+all the elements a[0..j-1] are less than or equal to <code>tmp</code>,
+so copying <code>tmp</code> to a[j] leaves a[0..i] in order.
+</li></ul>
+
+<p>
+Plugging this in gives the complete insertion sort algorithm:
+
+</p><div class="pseudocode" id="InsertionSort">
+<div class="codeheader">InsertionSort(a[0..n-1])</div>
+<pre>i ← 1
+</pre>
+<span class="invariant"><b>invariant:</b> a[0..i-1] in ascending order</span>
+<pre>WHILE i &lt; n
+        tmp ← a[i]
+        j ← i
+</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="invariant"><b>invariant:</b> a[0..j-1], a[j+1..i] in ascending order and tmp &lt; a[j+1..i]</span>
+<pre>        WHILE j &gt; 0 AND a[j-1] &gt; tmp
+                a[j] ← a[j-1]
+                j ← j-1
+        a[j] ← tmp
+        i ← i+1
+</pre>
+</div>
+
+<script language="JavaScript">
+getProcedure("InsertionSort").cellColour = leftToRightColour("a", "i");
+</script>
+
+<div class="task">
+Step through the working of insertion sort:
+
+<canvas id="insertionSort" width="650" height="250">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<button onclick="insertionSort.reset()">Reset</button>
+<button onclick="insertionSort.step()">Single step</button>
+<button onclick="insertionSort.bigStep()">Big step</button>
+<button onclick="insertionSort.run()">Run</button>
+<button onclick="insertionSort.stop()">Stop</button>
+</div>
+
+<script language="JavaScript">
+var insertionSort = new CodeApplet("insertionSort", "InsertionSort",
+	{a: [27, 14, 77, 85, 34, 16, 58]});
+</script>
+
+<h3>Evaluation of insertion sort</h3>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+Insertion sort uses O(1) extra space, for several temporary variables.
+
+</p><p>
+Again we can work out the time complexity by examining the loops.
+In the worst case, this algorithm does 1 + 2 + 3 + ... + (n-2) + (n-1)
+comparisons, which we know is O(n<sup>2</sup>).
+
+</p><p>
+However, the inner loop of this algorithm has an extra condition,
+which depends on the input data.
+In particular, if <code>a[i]</code> is at least as big as the preceding
+elements, the inner loop exits after only one comparison.
+If the initial array is already ordered, the algorithm does only n-1
+comparisons, which is O(n).
+Thus insertion sort is an adaptive sort.
+
+</p><p>
+The same test ensures that we never move <code>a[i]</code> past an equal
+element.  Thus insertion sort is also a stable sort.
+</p></div>
+
+<div class="unit-40">
+<div class="pseudocode">
+<div class="codeheader">InsertionSort(a[0..n-1])</div>
+<pre>i ← 1
+WHILE i &lt; n
+        tmp ← a[i]
+        j ← i
+        WHILE j &gt; 0 AND <span style="color: red; font-weight: bold">a[j-1] &gt; tmp</span>
+                a[j] ← a[j-1]
+                j ← j-1
+        a[j] ← tmp
+        i ← i+1
+</pre>
+</div>
+</div>
+</div>
+
+<h2>Can we do better?</h2>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+One idea for a faster sort is to move things over longer distances by
+first sorting the even and odd positions separately using a simple
+adaptive sort, such as insertion sort.
+So if we start with the array
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="cell">27</td>
+<td class="cell">14</td>
+<td class="cell">77</td>
+<td class="cell">85</td>
+<td class="cell">34</td>
+<td class="cell">16</td>
+<td class="cell">58</td>
+</tr>
+</tbody></table>
+</center>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+Sorting the even positions yields
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="cell"><span class="changed">27</span></td>
+<td class="cell">14</td>
+<td class="cell"><span class="changed">34</span></td>
+<td class="cell">85</td>
+<td class="cell"><span class="changed">58</span></td>
+<td class="cell">16</td>
+<td class="cell"><span class="changed">77</span></td>
+</tr>
+</tbody></table>
+</center>
+
+<p>
+Sorting the odd positions yields
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="cell">27</td>
+<td class="cell"><span class="changed">14</span></td>
+<td class="cell">34</td>
+<td class="cell"><span class="changed">16</span></td>
+<td class="cell">58</td>
+<td class="cell"><span class="changed">85</span></td>
+<td class="cell">77</td>
+</tr>
+</tbody></table>
+</center>
+
+<p>
+We still need to sort the whole array, but now the array is nearly ordered,
+so our (adaptive) insertion sort will go faster:
+
+</p><center>
+<table class="array">
+<tbody><tr>
+<td></td>
+<td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+</tr><tr>
+<td>a</td>
+<td class="sortedcell">14</td>
+<td class="sortedcell">16</td>
+<td class="sortedcell">27</td>
+<td class="sortedcell">34</td>
+<td class="sortedcell">58</td>
+<td class="sortedcell">77</td>
+<td class="sortedcell">85</td>
+</tr>
+</tbody></table>
+</center>
+
+<p>
+Extending this idea with a whole sequence of intervals yields Shell sort
+(invented by Donald Shell in 1959).
+Shell sort is still only partially understood,
+but is a lot faster than the O(n<sup>2</sup>) sorts.
+We'll be looking at even faster (and better-understood) sorts in week 7.
+
+</p><p>
+<strong>Moral:</strong>
+Tweaking your code yields only small improvements in performance,
+at the cost of making it harder to understand (and possibly wrong).
+Switching to a different algorithm can make your program enormously faster.
+
+</p></div>
+
+<div class="unit-40">
+<img src="./Introducing sorting algorithms_files/shellsort.svg">
+<p class="annotation">
+Experimentally measured performance of Shell sort, using the gap sequence
+1, 2, 4, 9, 20, 45, 101, 227, ...
+(good, but not the best known)
+</p>
+
+<div class="aside">
+<p>
+Faster sorts exploit the fact that if we know that x ≤ y and also y ≤ z,
+then we also know that x ≤ z without having to perform another comparison.
+These sorts use positioning in the array to remember the results of earlier
+comparisons, to save work later.
+</p></div>
+
+</div>
+</div>
+
+<hr noshade="" size="1">
+
+</div>  <!-- End of soiContent -->
+</div> <!-- end of page -->
+
+
+
+</body></html>

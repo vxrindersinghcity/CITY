@@ -1,0 +1,245 @@
+table th {
+    font-weight: bold;
+}
+
+canvas {
+    display: block;
+    border-radius: 8px;
+    border: solid;
+    border-color: black;
+    border-width: 3px;
+    margin: 20px;
+    box-shadow: 8px 8px 5px #888;
+}
+
+form {
+    padding: 10px;
+    margin: 10px;
+    border: solid black 3px;
+}
+
+div.hidden {
+    display: none;
+}
+
+div.pseudocode {
+    border-radius: 8px;
+    font-weight: normal;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background-color: #ffeecc;
+    border: solid;
+    border-color: #a0522d;
+    border-width: 3px;
+    margin: 20px 10px 20px 20px;
+    line-height:100%;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+}
+
+div.codeheader:before {
+    content: "Algorithm ";
+    color: #fdc;
+}
+
+div.codeheader {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 6px;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    background: #a0522d;
+    text-align: left;
+    font-weight: bold;
+    font-size: 120%;
+    text-decoration: none;
+    color: #fff;
+}
+
+div.pseudocode pre {
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    font-size: 100%;
+    line-height: 150%;
+    padding: 0px;
+    margin: 12px 10px 15px 30px;
+    background-color: inherit;
+}
+
+div.pseudocode b {
+    padding-left: 5px;
+}
+
+div.pseudocode li {
+    list-style: none;
+}
+
+ul.plain li {
+    list-style: none;
+}
+
+span.invariant {
+    background-color: #ffd;
+    margin: 0em 0em 0em 2.5em;
+    padding: 3px 5px 3px 2px;
+    border-radius: 5px;
+    border: solid #aa0 2px;
+}
+
+span.precondition {
+    margin: 0em 0em 0em 2em;
+    background-color: #ffd;
+    padding: 3px 5px 3px 2px;
+    border-radius: 5px;
+    border: solid #aa0 2px;
+}
+
+span.postcondition {
+    margin: 0em 0em 0em 2em;
+    background-color: #ddf;
+    padding: 3px 5px 3px 2px;
+    border-radius: 5px;
+    border: solid #00f 2px;
+}
+
+table.array {
+    display: inline;
+}
+
+table.array td {
+    border: 0px;
+}
+
+table.array td.cell {
+    border: solid black 1px;
+    background-color: white;
+    font-weight: bold;
+}
+
+table.array td.sortedcell {
+    border: solid black 1px;
+    background-color: #ddd;
+    font-weight: bold;
+}
+
+table.smallarray {
+    display: inline;
+}
+
+table.smallarray td {
+    border: 0px;
+}
+
+table.smallarray td.cell {
+    border: solid black 1px;
+    background-color: white;
+    font-weight: bold;
+    padding: 2px;
+    text-align: center;
+    width: 3ex;
+}
+
+table.diagram td {
+    border: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+table.transitions td {
+    border: 0px;
+    text-align: center;
+    padding: 0em 0.3em 0em 0.3em;
+}
+
+span.changed {
+    color: red;
+}
+
+div.trace ul {
+    list-style-type: none;
+    border-left: solid #aaa 2px;
+    padding-left: 0.3em;
+    margin-left: 1.5em;
+}
+
+p.formula {
+    text-align: center;
+    font-size: 125%;
+}
+
+td.good {
+    font-weight: bold;
+    color: green;
+}
+
+td.bad {
+    font-weight: bold;
+    color: red;
+}
+
+div.homework ol {
+    list-style-type: lower-alpha;
+}
+
+ol.subquestions {
+    list-style-type: lower-alpha;
+}
+
+/* from bootcamp.css */
+.shextras {
+    border: 1px solid #666;
+}
+
+/* adapted from master.css */
+p.annotation {
+    font-style: italic;
+    font-size: 90%;
+    color: #333;
+}
+
+/* similar to homework, challenge, etc in master.css */
+.definition::before, .definition {
+    background-color: #fec;
+    border-radius: 8px;
+    font-weight: normal;
+    border: solid;
+    border-color: #ccc;
+    border-width: 1px;
+}
+.definition::before {
+    content: "definition";
+    -webkit-border-radius: 8px;
+    -webkit-border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius: 8px;
+    -moz-border-radius-bottomright: 0;
+    -moz-border-radius-bottomleft: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom:1px solid #fec;
+ 
+    line-height:100%;
+    padding: 0.3em;
+    padding-bottom:1px;
+    font-weight: 600;
+    float: right;
+    margin-bottom:0;
+    margin-top:-2em;
+    margin-right:-0.6em;
+}
+.definition {
+    padding: 0.5em;
+    line-height:130%;
+    margin-bottom: 20px;
+    border-top-right-radius: 0;
+}
+
+.definition em {
+    font-style: normal;
+    font-weight: bold;
+    color: #a00;
+}
+
+.soiContent a:link, .soiContent a:visited {
+    text-decoration: underline; font-weight: bold; color: #003399;
+}

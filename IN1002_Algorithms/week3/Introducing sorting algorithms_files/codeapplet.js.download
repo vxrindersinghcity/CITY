@@ -1,0 +1,1266 @@
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var builtIn = {};
+builtIn.Swap = ArrayUtilities.swap;
+var CodeAppletImpl;
+(function (CodeAppletImpl) {
+    var codeParams = {
+        timeStep: 1000,
+        lineSpacing: 20,
+        baseLine: 16,
+        indent: 30,
+        cellWidth: 40,
+        cellHeight: 30,
+        leftMargin: 60,
+        rightMargin: 30,
+        headerHeight: 30,
+        headerColour: "#a0522d",
+        codeColour: "#ffeecc",
+        currentColour: "#ffcc77",
+        stateColour: "#eeccaa"
+    };
+    function emptyDictionary() { return {}; }
+    var predicates = {
+        even: function (n) {
+            return Number.isInteger(n / 2);
+        },
+        odd: function (n) {
+            return !Number.isInteger(n / 2);
+        },
+        composite: function (n) {
+            if (Number.isInteger(n / 2))
+                return true;
+            for (var f = 3; f * f <= n; f += 2)
+                if (Number.isInteger(n / f))
+                    return true;
+            return false;
+        },
+        prime: function (n) {
+            return !predicates.composite(n);
+        }
+    };
+    var currentParams;
+    var callsOnCurrentLine;
+    var Scanner = (function () {
+        function Scanner(str) {
+            this.str = str;
+            this.indents = [];
+            this.pendingCloses = 0;
+            this.advance();
+        }
+        Scanner.prototype.current = function () { return this.token; };
+        Scanner.prototype.peek = function () { return this.str; };
+        Scanner.prototype.getCurrLine = function () {
+            return this.str.match(/.*/)[0];
+        };
+        Scanner.prototype.skipSpace = function () {
+            var match = this.str.match(/^ */);
+            var len = match[0].length;
+            this.str = this.str.substr(len);
+            return len;
+        };
+        Scanner.prototype.advance = function () {
+            if (this.pendingCloses > 0) {
+                this.pendingCloses--;
+                this.token = '}';
+                return;
+            }
+            var spaceLength = this.skipSpace();
+            if (this.indents.length === 0) {
+                this.currLine = this.getCurrLine();
+                this.indents.push(spaceLength);
+            }
+            if (this.str.charAt(0) === '\r')
+                this.str = this.str.substr(1);
+            if (this.str.charAt(0) === '\n') {
+                do {
+                    this.str = this.str.substr(1);
+                    spaceLength = this.skipSpace();
+                    if (this.str.charAt(0) === '\r')
+                        this.str = this.str.substr(1);
+                } while (this.str.charAt(0) === '\n');
+                this.currLine = this.getCurrLine();
+                if (this.str.length > 0) {
+                    var currentIndent = this.indents[this.indents.length - 1];
+                    if (spaceLength > currentIndent) {
+                        this.indents.push(spaceLength);
+                        this.token = '{';
+                    }
+                    else if (spaceLength === currentIndent) {
+                        this.token = ';';
+                    }
+                    else {
+                        while (this.indents.length > 1 && spaceLength < this.indents[this.indents.length - 1]) {
+                            this.indents.pop();
+                            this.pendingCloses++;
+                        }
+                        if (spaceLength !== this.indents[this.indents.length - 1])
+                            this.fail("inconsistent indentation");
+                        this.pendingCloses--;
+                        this.token = '}';
+                    }
+                    return;
+                }
+            }
+            if (this.str.length === 0) {
+                while (this.indents.length > 1) {
+                    this.indents.pop();
+                    this.pendingCloses++;
+                }
+                if (this.pendingCloses > 0) {
+                    this.pendingCloses--;
+                    this.token = '}';
+                }
+                else
+                    this.token = '';
+                return;
+            }
+            var token = this.str.match(/^([a-zA-Z]\w*|\d+|.)/)[0];
+            this.str = this.str.substr(token.length);
+            this.token = token;
+        };
+        Scanner.prototype.fail = function (msg) {
+            throw msg + ": " + this.currLine;
+        };
+        Scanner.prototype.match = function (t) {
+            if (this.token !== t)
+                this.fail("'" + this.token + "' found when expecting '" + t + "'");
+            this.advance();
+        };
+        Scanner.prototype.getRestOfLine = function () {
+            return this.getCurrLine().trim();
+        };
+        Scanner.prototype.just = function (nonterm) {
+            var e = nonterm(this);
+            if (this.token !== '')
+                this.fail("'" + this.token + "' found when expecting end of string");
+            return e;
+        };
+        Scanner.prototype.test = function () {
+            var all = this.token;
+            this.advance();
+            while (this.token !== '') {
+                all = all + ' ' + this.token;
+                this.advance();
+            }
+            console.log(all);
+        };
+        return Scanner;
+    }());
+    function algHeader(sc) {
+        sc.advance();
+        sc.match('(');
+        var params = [];
+        params.push(parameter(sc));
+        while (sc.token === ',') {
+            sc.advance();
+            params.push(parameter(sc));
+        }
+        sc.match(')');
+        return params;
+    }
+    function parameter(sc) {
+        var name = sc.token;
+        sc.advance();
+        if (sc.token !== '[')
+            return { paramName: name };
+        sc.advance();
+        var size;
+        if (sc.current() === '0') {
+            sc.advance();
+            sc.match('.');
+            sc.match('.');
+            size = sc.token;
+            sc.advance();
+            sc.match('-');
+            sc.match('1');
+        }
+        else {
+            size = sc.token;
+            sc.advance();
+        }
+        sc.match(']');
+        return { paramName: name, sizeName: size };
+    }
+    function block(sc) {
+        sc.match('{');
+        var stmts = stmtlist(sc);
+        sc.match('}');
+        return stmts;
+    }
+    function stmtlist(sc) {
+        var stmts = [];
+        stmts.push(stmt(sc));
+        while (sc.token !== '}' && sc.token !== '') {
+            if (sc.token === ';')
+                sc.advance();
+            stmts.push(stmt(sc));
+        }
+        return new Block(stmts);
+    }
+    function stmt(sc) {
+        callsOnCurrentLine = [];
+        var v = sc.token;
+        if (v === 'WHILE') {
+            var line_1 = sc.getRestOfLine();
+            sc.advance();
+            var cond = expr(sc);
+            var fcalls = callsOnCurrentLine;
+            var body = block(sc);
+            return new WhileStmt(fcalls, line_1, cond, body);
+        }
+        if (v === 'IF') {
+            var line_2 = sc.getRestOfLine();
+            sc.advance();
+            var cond = expr(sc);
+            var fcalls = callsOnCurrentLine;
+            var thenPart = block(sc);
+            if (sc.token !== 'ELSE')
+                return new IfStmt(fcalls, line_2, cond, thenPart);
+            sc.advance();
+            var else_block = sc.current() === '{';
+            var elsePart = else_block ? block(sc) : new Block([stmt(sc)]);
+            return new IfElseStmt(fcalls, line_2, cond, thenPart, elsePart, else_block);
+        }
+        if (v === 'RETURN') {
+            var line_3 = sc.getRestOfLine();
+            sc.advance();
+            var e = expr(sc);
+            return new ReturnStmt(callsOnCurrentLine, line_3, e);
+        }
+        var line = sc.currLine;
+        sc.advance();
+        if (sc.token === '(') {
+            var args = arglist(sc);
+            return new CallStmt(callsOnCurrentLine, line, v, args);
+        }
+        var lhs;
+        if (sc.token === '[') {
+            sc.advance();
+            var i = expr(sc);
+            sc.match(']');
+            lhs = assignArrayElement(v, i);
+        }
+        else
+            lhs = assignVariable(v);
+        sc.match('←');
+        var rhs = expr(sc);
+        return new AssignStmt(callsOnCurrentLine, line, v, lhs, rhs);
+    }
+    function expr(sc) {
+        var d = disjunct(sc);
+        while (sc.token === 'OR') {
+            sc.advance();
+            d = orFn(d, disjunct(sc));
+        }
+        return d;
+    }
+    function disjunct(sc) {
+        var c = conjunct(sc);
+        while (sc.token === 'AND') {
+            sc.advance();
+            c = andFn(c, conjunct(sc));
+        }
+        return c;
+    }
+    function conjunct(sc) {
+        if (sc.token === 'NOT') {
+            sc.advance();
+            return notFn(conjunct(sc));
+        }
+        var e = nexpr(sc);
+        switch (sc.token) {
+            case '=':
+                sc.advance();
+                return eqFn(e, nexpr(sc));
+            case '<':
+                sc.advance();
+                return ltFn(e, nexpr(sc));
+            case '≤':
+                sc.advance();
+                return leFn(e, nexpr(sc));
+            case '≠':
+                sc.advance();
+                return neFn(e, nexpr(sc));
+            case '>':
+                sc.advance();
+                return gtFn(e, nexpr(sc));
+            case '≥':
+                sc.advance();
+                return geFn(e, nexpr(sc));
+            case 'is':
+                sc.advance();
+                return predFn(predicate(sc), e);
+            default: return e;
+        }
+    }
+    function predicate(sc) {
+        var tok = sc.token;
+        if (!(tok in predicates))
+            sc.fail("unknown predicate '" + tok + "'");
+        sc.advance();
+        return predicates[tok];
+    }
+    function nexpr(sc) {
+        var t = term(sc);
+        while (true)
+            switch (sc.token) {
+                case '+':
+                    sc.advance();
+                    t = plusFn(t, term(sc));
+                    break;
+                case '-':
+                    sc.advance();
+                    t = minusFn(t, term(sc));
+                    break;
+                default: return t;
+            }
+    }
+    function term(sc) {
+        var f = factor(sc);
+        while (true)
+            switch (sc.token) {
+                case '*':
+                    sc.advance();
+                    f = multFn(f, factor(sc));
+                    break;
+                case 'DIV':
+                    sc.advance();
+                    f = divFn(f, factor(sc));
+                    break;
+                case 'MOD':
+                    sc.advance();
+                    f = modFn(f, factor(sc));
+                    break;
+                default: return f;
+            }
+    }
+    function factor(sc) {
+        if (sc.token === '-') {
+            sc.advance();
+            return negateFn(factor(sc));
+        }
+        if (sc.token === '(') {
+            sc.advance();
+            var e = expr(sc);
+            sc.match(')');
+            return e;
+        }
+        var v = sc.token;
+        sc.advance();
+        var matches = v.match(/^[0-9]+/);
+        if (matches)
+            return constFn(Number(matches[0]));
+        if (v === 'true')
+            return constFn(true);
+        if (v === 'false')
+            return constFn(false);
+        if (sc.token === '(')
+            return callFn(v, arglist(sc));
+        if (sc.token === '[') {
+            sc.advance();
+            var i = expr(sc);
+            if (sc.current() === '.') {
+                sc.advance();
+                sc.match('.');
+                var j = expr(sc);
+                sc.match(']');
+                return subarrayFn(v, i, j);
+            }
+            sc.match(']');
+            return indexFn(v, i);
+        }
+        if (v === 'a' && sc.token === 'new') {
+            sc.advance();
+            sc.match('array');
+            sc.match('of');
+            sc.match('length');
+            return newarrayFn(expr(sc));
+        }
+        for (var _i = 0, currentParams_1 = currentParams; _i < currentParams_1.length; _i++) {
+            var param = currentParams_1[_i];
+            if (param.sizeName === v)
+                return lengthFn(param.paramName);
+        }
+        return varFn(v);
+    }
+    function arglist(sc) {
+        sc.match('(');
+        var args = [];
+        args.push(expr(sc));
+        while (sc.token === ',') {
+            sc.advance();
+            args.push(expr(sc));
+        }
+        sc.match(')');
+        return args;
+    }
+    function constFn(n) {
+        return function (s) { return n; };
+    }
+    function varFn(v) {
+        return function (s) { return s.localVars[v]; };
+    }
+    function indexFn(v, f) {
+        return function (s) { return s.localVars[v][f(s)]; };
+    }
+    function subarrayFn(v, f, g) {
+        return function (s) {
+            var start = f(s);
+            var finish = g(s);
+            var a = s.localVars[v];
+            var result = [];
+            for (var i = start; i <= finish; i++)
+                result.push(a[i]);
+            return result;
+        };
+    }
+    function newarrayFn(f) {
+        return function (s) {
+            var size = f(s);
+            var result = [];
+            for (var i = 0; i < size; i++)
+                result.push('');
+            s.grown = true;
+            return result;
+        };
+    }
+    function andFn(f, g) {
+        return function (s) { return f(s) && g(s); };
+    }
+    function orFn(f, g) {
+        return function (s) { return f(s) || g(s); };
+    }
+    function notFn(f) {
+        return function (s) { return !f(s); };
+    }
+    function eqFn(f, g) {
+        return function (s) { return f(s) === g(s); };
+    }
+    function neFn(f, g) {
+        return function (s) { return f(s) !== g(s); };
+    }
+    function ltFn(f, g) {
+        return function (s) { return f(s) < g(s); };
+    }
+    function leFn(f, g) {
+        return function (s) { return f(s) <= g(s); };
+    }
+    function gtFn(f, g) {
+        return function (s) { return f(s) > g(s); };
+    }
+    function geFn(f, g) {
+        return function (s) { return f(s) >= g(s); };
+    }
+    function lengthFn(v) {
+        return function (s) { return s.localVars[v].length; };
+    }
+    function negateFn(f) {
+        return function (s) { return -f(s); };
+    }
+    function plusFn(f, g) {
+        return function (s) { return f(s) + g(s); };
+    }
+    function minusFn(f, g) {
+        return function (s) { return f(s) - g(s); };
+    }
+    function multFn(f, g) {
+        return function (s) { return f(s) * g(s); };
+    }
+    function divFn(f, g) {
+        return function (s) { return Math.floor(f(s) / g(s)); };
+    }
+    function modFn(f, g) {
+        return function (s) {
+            var x = f(s);
+            var y = g(s);
+            var d = Math.floor(x / y);
+            return x - d * y;
+        };
+    }
+    function predFn(p, f) {
+        return function (s) { return p(f(s)); };
+    }
+    function callFn(name, args) {
+        if (typeof builtIn[name] !== 'undefined')
+            return function (s) {
+                return builtIn[name].apply(null, evalArgs(s, args));
+            };
+        var fn = callsOnCurrentLine.length;
+        callsOnCurrentLine.push(new FunctionCall(name, args));
+        return function (s) {
+            return s.returnValues[fn];
+        };
+    }
+    function assignVariable(x) {
+        return function (s, v) {
+            s.localVars[x] = v;
+        };
+    }
+    function assignArrayElement(a, ix) {
+        return function (s, v) {
+            s.localVars[a][ix(s)] = v;
+        };
+    }
+    function evalArgs(state, args) {
+        var actuals = [];
+        for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+            var arg = args_1[_i];
+            actuals.push(arg(state));
+        }
+        return actuals;
+    }
+    var Statement = (function () {
+        function Statement(size, fcalls) {
+            this.size = size;
+            this.fcalls = fcalls;
+        }
+        return Statement;
+    }());
+    var AssignStmt = (function (_super) {
+        __extends(AssignStmt, _super);
+        function AssignStmt(fcalls, text, variable, lhs, rhs) {
+            var _this = _super.call(this, 1, fcalls) || this;
+            _this.text = text;
+            _this.variable = variable;
+            _this.lhs = lhs;
+            _this.rhs = rhs;
+            return _this;
+        }
+        AssignStmt.prototype.draw = function (cursor, depth) {
+            cursor.printLine(this.text, depth);
+        };
+        AssignStmt.prototype.patch = function (start, succ) { this.next = succ; };
+        ;
+        AssignStmt.prototype.getStmt = function (offset) { return this; };
+        AssignStmt.prototype.addLocals = function (state) {
+            addVariable(state, this.variable);
+        };
+        AssignStmt.prototype.execute = function (state) {
+            var s = state.stack.localValues;
+            this.lhs(s, this.rhs(s));
+            state.stack.setPC(this.next);
+        };
+        return AssignStmt;
+    }(Statement));
+    var ReturnStmt = (function (_super) {
+        __extends(ReturnStmt, _super);
+        function ReturnStmt(fcalls, text, expr) {
+            var _this = _super.call(this, 1, fcalls) || this;
+            _this.text = text;
+            _this.expr = expr;
+            return _this;
+        }
+        ReturnStmt.prototype.draw = function (cursor, depth) {
+            cursor.printLine("RETURN " + this.text, depth);
+        };
+        ReturnStmt.prototype.patch = function (start, succ) { this.next = start; };
+        ReturnStmt.prototype.getStmt = function (offset) { return this; };
+        ReturnStmt.prototype.addLocals = function (state) { };
+        ReturnStmt.prototype.execute = function (state) {
+            state.returnValue(this.expr(state.stack.localValues));
+        };
+        return ReturnStmt;
+    }(Statement));
+    var CallStmt = (function (_super) {
+        __extends(CallStmt, _super);
+        function CallStmt(fcalls, text, pname, args) {
+            var _this = _super.call(this, 1, fcalls) || this;
+            _this.text = text;
+            _this.pname = pname;
+            _this.args = args;
+            return _this;
+        }
+        CallStmt.prototype.draw = function (cursor, depth) {
+            cursor.printLine(this.text, depth);
+        };
+        CallStmt.prototype.patch = function (start, succ) { this.next = succ; };
+        CallStmt.prototype.getStmt = function (offset) { return this; };
+        CallStmt.prototype.addLocals = function (state) { };
+        CallStmt.prototype.execute = function (state) {
+            var args = evalArgs(state.stack.localValues, this.args);
+            if (this.pname in builtIn) {
+                builtIn[this.pname].apply(null, args);
+                state.stack.setPC(this.next);
+            }
+            else {
+                state.stack.returnAddress = this.next;
+                var proc = getProcedure(this.pname);
+                var vars = proc.parameterValues(args);
+                state.callProcedure(proc, vars);
+            }
+        };
+        return CallStmt;
+    }(Statement));
+    var WhileStmt = (function (_super) {
+        __extends(WhileStmt, _super);
+        function WhileStmt(fcalls, text, cond, body) {
+            var _this = _super.call(this, body.size + 1, fcalls) || this;
+            _this.text = text;
+            _this.cond = cond;
+            _this.body = body;
+            return _this;
+        }
+        WhileStmt.prototype.draw = function (cursor, depth) {
+            cursor.printLine("WHILE " + this.text, depth);
+            this.body.draw(cursor, depth + 1);
+        };
+        WhileStmt.prototype.patch = function (start, succ) {
+            this.next = start + 1;
+            this.succ = succ;
+            this.body.patch(start + 1, start);
+        };
+        WhileStmt.prototype.getStmt = function (offset) {
+            return offset === 0 ? this : this.body.getStmt(offset - 1);
+        };
+        WhileStmt.prototype.addLocals = function (state) {
+            this.body.addLocals(state);
+        };
+        WhileStmt.prototype.execute = function (state) {
+            state.stack.setPC(this.cond(state.stack.localValues) ? this.next : this.succ);
+        };
+        return WhileStmt;
+    }(Statement));
+    var IfStmt = (function (_super) {
+        __extends(IfStmt, _super);
+        function IfStmt(fcalls, text, cond, thenPart) {
+            var _this = _super.call(this, thenPart.size + 1, fcalls) || this;
+            _this.text = text;
+            _this.cond = cond;
+            _this.thenPart = thenPart;
+            return _this;
+        }
+        IfStmt.prototype.draw = function (cursor, depth) {
+            cursor.printLine("IF " + this.text, depth);
+            this.thenPart.draw(cursor, depth + 1);
+        };
+        IfStmt.prototype.patch = function (start, succ) {
+            this.next = start + 1;
+            this.succ = succ;
+            this.thenPart.patch(start + 1, succ);
+        };
+        IfStmt.prototype.getStmt = function (offset) {
+            if (offset === 0)
+                return this;
+            return this.thenPart.getStmt(offset - 1);
+        };
+        IfStmt.prototype.addLocals = function (state) {
+            this.thenPart.addLocals(state);
+        };
+        IfStmt.prototype.execute = function (state) {
+            state.stack.setPC(this.cond(state.stack.localValues) ? this.next : this.succ);
+        };
+        return IfStmt;
+    }(Statement));
+    var IfElseStmt = (function (_super) {
+        __extends(IfElseStmt, _super);
+        function IfElseStmt(fcalls, text, cond, thenPart, elsePart, elseBlock) {
+            var _this = _super.call(this, thenPart.size + (elseBlock ? 2 : 1) + elsePart.size, fcalls) || this;
+            _this.text = text;
+            _this.cond = cond;
+            _this.thenPart = thenPart;
+            _this.elsePart = elsePart;
+            _this.elseBlock = elseBlock;
+            return _this;
+        }
+        IfElseStmt.prototype.draw = function (cursor, depth) {
+            cursor.printLine("IF " + this.text, depth);
+            this.thenPart.draw(cursor, depth + 1);
+            if (this.elseBlock) {
+                cursor.printLine("ELSE", depth);
+                this.elsePart.draw(cursor, depth + 1);
+            }
+            else {
+                cursor.prefixNextLine("ELSE ");
+                this.elsePart.draw(cursor, depth);
+            }
+        };
+        IfElseStmt.prototype.patch = function (start, succ) {
+            this.next = start + 1;
+            this.succ = succ;
+            this.thenPart.patch(start + 1, succ);
+            this.elseLabel = start +
+                (this.elseBlock ? 2 : 1) + this.thenPart.size;
+            this.elsePart.patch(this.elseLabel, succ);
+        };
+        IfElseStmt.prototype.getStmt = function (offset) {
+            if (offset === 0)
+                return this;
+            if (offset > this.thenPart.size)
+                return this.elsePart.getStmt(offset - (this.elseBlock ? 2 : 1) - this.thenPart.size);
+            return this.thenPart.getStmt(offset - 1);
+        };
+        IfElseStmt.prototype.addLocals = function (state) {
+            this.thenPart.addLocals(state);
+            this.elsePart.addLocals(state);
+        };
+        IfElseStmt.prototype.execute = function (state) {
+            state.stack.setPC(this.cond(state.stack.localValues) ?
+                this.next : this.elseLabel);
+        };
+        return IfElseStmt;
+    }(Statement));
+    function addVariable(state, variable) {
+        if (!(variable in state))
+            state[variable] = '';
+    }
+    var Block = (function () {
+        function Block(stmts) {
+            this.stmts = stmts;
+            var count = 0;
+            for (var _i = 0, _a = this.stmts; _i < _a.length; _i++) {
+                var stmt = _a[_i];
+                count += stmt.size;
+            }
+            this.size = count;
+        }
+        Block.prototype.draw = function (cursor, depth) {
+            for (var _i = 0, _a = this.stmts; _i < _a.length; _i++) {
+                var stmt = _a[_i];
+                stmt.draw(cursor, depth);
+            }
+        };
+        Block.prototype.patch = function (start, succ) {
+            var len = this.stmts.length;
+            for (var i = 0; i < len - 1; i++) {
+                this.stmts[i].patch(start, start + this.stmts[i].size);
+                start += this.stmts[i].size;
+            }
+            this.stmts[len - 1].patch(start, succ);
+        };
+        Block.prototype.getStmt = function (offset) {
+            var i = 0;
+            while (offset >= this.stmts[i].size) {
+                offset -= this.stmts[i].size;
+                i++;
+            }
+            return this.stmts[i].getStmt(offset);
+        };
+        Block.prototype.addLocals = function (state) {
+            for (var _i = 0, _a = this.stmts; _i < _a.length; _i++) {
+                var stmt = _a[_i];
+                stmt.addLocals(state);
+            }
+        };
+        return Block;
+    }());
+    var FunctionCall = (function () {
+        function FunctionCall(fname, args) {
+            this.fname = fname;
+            this.args = args;
+        }
+        return FunctionCall;
+    }());
+    var definedProcedure = emptyDictionary();
+    function getProcedure(codeId) {
+        if (typeof definedProcedure[codeId] === 'undefined')
+            definedProcedure[codeId] = new Procedure(codeId);
+        return definedProcedure[codeId];
+    }
+    CodeAppletImpl.getProcedure = getProcedure;
+    var Procedure = (function () {
+        function Procedure(codeId) {
+            var node = document.getElementById(codeId);
+            var children = node.childNodes;
+            var numChildren = children.length;
+            var codeText = '';
+            for (var i = 0; i < numChildren; i++) {
+                var child = children[i];
+                if (child.nodeType === 1) {
+                    if (child.tagName === 'DIV' && !this.header)
+                        this.header = child.textContent;
+                    else if (child.tagName === 'PRE')
+                        codeText += child.textContent;
+                }
+            }
+            this.params = new Scanner(this.header).just(algHeader);
+            currentParams = this.params;
+            this.body = new Scanner(codeText).just(stmtlist);
+            this.body.patch(0, this.body.size);
+            this.size = this.body.size;
+        }
+        Procedure.prototype.parameterValues = function (vs) {
+            var vars = emptyDictionary();
+            for (var i in vs)
+                vars[this.params[i].paramName] = vs[i];
+            return vars;
+        };
+        Procedure.prototype.addLocals = function (state) {
+            this.body.addLocals(state);
+        };
+        Procedure.prototype.getStmt = function (offset) {
+            return this.body.getStmt(offset);
+        };
+        Procedure.prototype.drawHeader = function (ctx, x, y) {
+            ctx.fillText(this.header, x, y);
+        };
+        Procedure.prototype.drawBody = function (cursor) {
+            this.body.draw(cursor, 0);
+        };
+        Procedure.prototype.getSizeName = function (aname) {
+            for (var _i = 0, _a = this.params; _i < _a.length; _i++) {
+                var param = _a[_i];
+                if (param.paramName === aname)
+                    return param.sizeName ? param.sizeName : null;
+            }
+            return null;
+        };
+        Procedure.prototype.cellColour = function (state, aname, i) {
+            return "white";
+        };
+        return Procedure;
+    }());
+    function leftToRightColour(arr, ix) {
+        return function (state, aname, i) {
+            if (aname === arr) {
+                var curr = state[ix];
+                if (curr !== '') {
+                    if (i < curr)
+                        return ColourScheme.done;
+                    if (i === curr)
+                        return ColourScheme.highlight;
+                }
+            }
+            return ColourScheme.plain;
+        };
+    }
+    CodeAppletImpl.leftToRightColour = leftToRightColour;
+    var Activation = (function () {
+        function Activation(code, args, caller) {
+            this.caller = caller;
+            this.code = code;
+            this.pc = 0;
+            this.result = null;
+            this.localValues = {
+                localVars: args, returnValues: [], grown: false
+            };
+            code.addLocals(this.localValues.localVars);
+            this.saveState();
+            this.setDimensions();
+        }
+        Activation.prototype.setDimensions = function () {
+            var count = 0;
+            var arrayLen = 1;
+            var vars = this.localValues.localVars;
+            for (var v in vars)
+                if (vars.hasOwnProperty(v)) {
+                    count++;
+                    var val = vars[v];
+                    if (val instanceof Array && val.length > arrayLen)
+                        arrayLen = val.length;
+                }
+            if (this.result !== null) {
+                count++;
+                var val = this.result;
+                if (val instanceof Array && val.length > arrayLen)
+                    arrayLen = val.length;
+            }
+            this.codeOffset = codeParams.leftMargin +
+                arrayLen * codeParams.cellWidth + codeParams.rightMargin;
+            var codeHeight = codeParams.headerHeight + (this.code.size + 2) * codeParams.lineSpacing;
+            var stateHeight = codeParams.cellHeight + 50 * count;
+            this.displayHeight = codeHeight > stateHeight ? codeHeight : stateHeight;
+        };
+        Activation.prototype.getPC = function () { return this.pc; };
+        Activation.prototype.setPC = function (n) {
+            this.pc = n;
+            this.localValues.returnValues = [];
+        };
+        Activation.prototype.saveState = function () {
+            this.savedLocals = cloneVariables(this.localValues.localVars);
+        };
+        Activation.prototype.draw = function (canvas, codeOffset, y, arrays) {
+            this.drawState(canvas, y, arrays);
+            this.drawCode(canvas, codeOffset, y);
+        };
+        Activation.prototype.drawState = function (canvas, ybase, arrays) {
+            var ctx = canvas.getContext("2d");
+            var localVars = this.localValues.localVars;
+            var savedLocals = this.savedLocals;
+            var x = codeParams.leftMargin;
+            var y = ybase + codeParams.cellHeight;
+            for (var attr in localVars) {
+                ctx.textAlign = "right";
+                var val = localVars[attr];
+                var lastval = savedLocals[attr];
+                var len = val instanceof Array ? val.length : 1;
+                if (val instanceof Array) {
+                    arrays.addArray(val, y + codeParams.cellHeight / 2 - 5);
+                    var sizeName = this.code.getSizeName(attr);
+                    ctx.font = "12px Arial";
+                    ctx.fillStyle = "#444";
+                    if (typeof sizeName !== 'undefined')
+                        ctx.fillText(sizeName + " = " + len, x, y - 8);
+                    for (var i = 0; i < len; i++)
+                        ctx.fillText(String(i), x + (i + 1) * codeParams.cellWidth - 10, y - 8);
+                }
+                ctx.font = "16px Arial";
+                ctx.fillStyle = "black";
+                ctx.fillText(attr, x - 10, y + codeParams.baseLine);
+                this.drawCells(ctx, attr, x, y - 5, len);
+                ctx.textAlign = "center";
+                ctx.font = "bold 16px Arial";
+                if (val instanceof Array) {
+                    for (var i = 0; i < len; i++) {
+                        ctx.fillStyle =
+                            val[i] === lastval[i] ? "black" : "red";
+                        ctx.fillText(String(val[i]), x + (i + 0.5) * codeParams.cellWidth, y + codeParams.baseLine);
+                    }
+                }
+                else {
+                    ctx.fillStyle = val === lastval ? "black" : "red";
+                    ctx.fillText(String(val), x + codeParams.cellWidth / 2, y + codeParams.baseLine);
+                }
+                y += 50;
+            }
+            if (this.result !== null) {
+                if (this.result instanceof Array)
+                    arrays.addArray(this.result, y + codeParams.cellHeight / 2 - 5);
+                this.drawResult(ctx, x, y, this.result);
+            }
+        };
+        Activation.prototype.drawResult = function (ctx, x, y, val) {
+            ctx.textAlign = "right";
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#c00";
+            ctx.fillText("returns", x - 5, y + codeParams.baseLine);
+            var len = val instanceof Array ? val.length : 1;
+            if (val instanceof Array) {
+                ctx.font = "12px Arial";
+                ctx.fillStyle = "#444";
+                for (var i = 0; i < len; i++)
+                    ctx.fillText(String(i), x + (i + 1) * codeParams.cellWidth - 10, y - 8);
+            }
+            ctx.fillStyle = ColourScheme.plain;
+            ctx.fillRect(x, y - 5, len * codeParams.cellWidth, codeParams.cellHeight);
+            this.drawBox(ctx, x, y - 5, len);
+            ctx.textAlign = "center";
+            ctx.font = "bold 16px Arial";
+            ctx.fillStyle = "red";
+            if (val instanceof Array)
+                for (var i = 0; i < len; i++)
+                    ctx.fillText(String(val[i]), x + (i + 0.5) * codeParams.cellWidth, y + codeParams.baseLine);
+            else
+                ctx.fillText(String(val), x + codeParams.cellWidth / 2, y + codeParams.baseLine);
+        };
+        Activation.prototype.drawCells = function (ctx, attr, x, y, n) {
+            for (var i = 0; i < n; i++) {
+                ctx.fillStyle = this.code.cellColour(this.localValues.localVars, attr, i);
+                ctx.fillRect(x + i * codeParams.cellWidth, y, codeParams.cellWidth, codeParams.cellHeight);
+            }
+            this.drawBox(ctx, x, y, n);
+        };
+        Activation.prototype.drawBox = function (ctx, x, y, len) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(x, y, len * codeParams.cellWidth, codeParams.cellHeight);
+            if (len > 1) {
+                ctx.beginPath();
+                for (var i = 0; i < len; i++) {
+                    ctx.moveTo(x + i * codeParams.cellWidth, y);
+                    ctx.lineTo(x + i * codeParams.cellWidth, y + codeParams.cellHeight);
+                }
+                ctx.stroke();
+            }
+        };
+        Activation.prototype.drawCode = function (canvas, x, ybase) {
+            var ctx = canvas.getContext("2d");
+            var width = canvas.offsetWidth;
+            var y = ybase + codeParams.headerHeight + codeParams.lineSpacing;
+            ctx.textAlign = "left";
+            ctx.fillStyle = codeParams.headerColour;
+            ctx.fillRect(x, ybase, width - x, codeParams.headerHeight);
+            ctx.fillStyle = "white";
+            ctx.font = "18px Arial";
+            this.code.drawHeader(ctx, x + 20, ybase + 20);
+            ctx.fillStyle = codeParams.currentColour;
+            ctx.fillRect(x, y + this.pc * codeParams.lineSpacing, width - x, codeParams.lineSpacing);
+            ctx.fillStyle = "black";
+            ctx.font = "16px Arial";
+            this.code.drawBody(new Cursor(ctx, x + 20, y));
+        };
+        return Activation;
+    }());
+    var Machine = (function () {
+        function Machine(codeId, args) {
+            this.stack = new Activation(getProcedure(codeId), args, null);
+            this.initState = cloneVariables(this.stack.localValues.localVars);
+            this.finished = false;
+            this.depth = 0;
+        }
+        Machine.prototype.setVar = function (id, value) {
+            this.initState[id] = value;
+        };
+        Machine.prototype.saveState = function () {
+            this.stack.saveState();
+        };
+        Machine.prototype.reset = function () {
+            while (this.depth > 0)
+                this.returnVoid();
+            this.stack.localValues.localVars = cloneVariables(this.initState);
+            this.stack.saveState();
+            this.stack.setPC(0);
+            this.stack.result = null;
+            this.stack.setDimensions();
+            this.finished = false;
+        };
+        Machine.prototype.step = function () {
+            if (this.finished)
+                return;
+            var pc = this.stack.getPC();
+            if (pc >= this.stack.code.size) {
+                this.returnVoid();
+                return;
+            }
+            var stmt = this.stack.code.getStmt(pc);
+            var fcallsDone = this.stack.localValues.returnValues.length;
+            if (stmt.fcalls.length > fcallsDone) {
+                var fcall = stmt.fcalls[fcallsDone];
+                var args = evalArgs(this.stack.localValues, fcall.args);
+                var proc = getProcedure(fcall.fname);
+                var vars = proc.parameterValues(args);
+                this.callProcedure(proc, vars);
+            }
+            else
+                stmt.execute(this);
+        };
+        Machine.prototype.bigStep = function () {
+            if (this.finished)
+                return;
+            var startPc = this.stack.getPC();
+            var startDepth = this.depth;
+            if (startPc >= this.stack.code.size) {
+                this.returnVoid();
+                return;
+            }
+            var stmt = this.stack.code.getStmt(startPc);
+            do {
+                this.step();
+            } while (!this.finished &&
+                (this.depth > startDepth ||
+                    (this.depth === startDepth &&
+                        this.stack.getPC() > startPc &&
+                        this.stack.getPC() < startPc + stmt.size)));
+        };
+        Machine.prototype.callProcedure = function (proc, vars) {
+            this.stack = new Activation(proc, vars, this.stack);
+            this.depth++;
+        };
+        Machine.prototype.returnValue = function (v) {
+            if (this.stack.caller !== null) {
+                this.stack = this.stack.caller;
+                this.depth--;
+                this.stack.localValues.returnValues.push(v);
+                this.step();
+            }
+            else {
+                this.stack.result = v;
+                this.stack.setDimensions();
+                this.finished = true;
+            }
+        };
+        Machine.prototype.returnVoid = function () {
+            if (this.stack.caller !== null) {
+                this.stack = this.stack.caller;
+                this.depth--;
+                this.stack.setPC(this.stack.returnAddress);
+            }
+            else
+                this.finished = true;
+        };
+        Machine.prototype.displayHeight = function () {
+            var height = 0;
+            for (var s = this.stack; s !== null; s = s.caller)
+                height += s.displayHeight;
+            return height;
+        };
+        Machine.prototype.draw = function (canvas) {
+            if (this.stack.localValues.grown) {
+                this.stack.setDimensions();
+                this.stack.localValues.grown = false;
+            }
+            var codeOffset = 0;
+            for (var s = this.stack; s !== null; s = s.caller)
+                if (s.codeOffset > codeOffset)
+                    codeOffset = s.codeOffset;
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = codeParams.codeColour;
+            ctx.fillRect(codeOffset, 0, canvas.width - codeOffset, canvas.height);
+            var arrays = new Arrays();
+            var y = canvas.height;
+            for (var s = this.stack; s !== null; s = s.caller) {
+                y -= s.displayHeight;
+                s.draw(canvas, codeOffset, y, arrays);
+            }
+            arrays.drawLinks(ctx, codeOffset);
+            ctx.strokeStyle = codeParams.headerColour;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(codeOffset, 0);
+            ctx.lineTo(codeOffset, canvas.height);
+            ctx.stroke();
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 3;
+            y = canvas.height;
+            for (var s = this.stack; s !== null; s = s.caller) {
+                y -= s.displayHeight;
+                if (s.caller !== null) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+            }
+        };
+        return Machine;
+    }());
+    var Arrays = (function () {
+        function Arrays() {
+            this.arrays = [];
+        }
+        Arrays.prototype.addArray = function (arr, y) {
+            for (var _i = 0, _a = this.arrays; _i < _a.length; _i++) {
+                var entry = _a[_i];
+                if (entry.arr === arr) {
+                    entry.ys.push(y);
+                    return;
+                }
+            }
+            this.arrays.push({ arr: arr, ys: [y] });
+        };
+        Arrays.prototype.drawLinks = function (ctx, width) {
+            var arrCount = 0;
+            for (var _i = 0, _a = this.arrays; _i < _a.length; _i++) {
+                var entry = _a[_i];
+                if (entry.ys.length > 1)
+                    arrCount++;
+            }
+            if (arrCount === 0)
+                return;
+            var i = 0;
+            for (var _b = 0, _c = this.arrays; _b < _c.length; _b++) {
+                var entry = _c[_b];
+                var ys = entry.ys;
+                if (ys.length > 1) {
+                    var x = codeParams.leftMargin + entry.arr.length * codeParams.cellWidth + 1;
+                    var linex = width - codeParams.rightMargin * (arrCount - i) / (arrCount + 1);
+                    ctx.strokeStyle = "#aaa";
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x, ys[0]);
+                    ctx.lineTo(linex, ys[0]);
+                    ctx.lineTo(linex, ys[ys.length - 1]);
+                    ctx.lineTo(x, ys[ys.length - 1]);
+                    for (var i_1 = 1; i_1 < ys.length - 1; i_1++) {
+                        ctx.moveTo(x, ys[i_1]);
+                        ctx.lineTo(linex, ys[i_1]);
+                    }
+                    var lasty = ys[ys.length - 1];
+                    ctx.moveTo(x + 8, lasty - 5);
+                    ctx.lineTo(x, lasty);
+                    ctx.lineTo(x + 8, lasty + 5);
+                    ctx.stroke();
+                    i++;
+                }
+            }
+        };
+        return Arrays;
+    }());
+    var CodeApplet = (function (_super) {
+        __extends(CodeApplet, _super);
+        function CodeApplet(canvasId, codeId, args) {
+            var _this = _super.call(this, canvasId, codeParams.stateColour) || this;
+            _this.state = new Machine(codeId, cloneVariables(args));
+            _this.draw();
+            return _this;
+        }
+        CodeApplet.prototype.setVar = function (id, value) {
+            this.state.setVar(id, value);
+            this.reset();
+        };
+        CodeApplet.prototype.reset = function () {
+            this.state.reset();
+            this.draw();
+        };
+        CodeApplet.prototype.step = function () {
+            this.state.saveState();
+            this.state.step();
+            this.draw();
+        };
+        CodeApplet.prototype.bigStep = function () {
+            this.state.saveState();
+            this.state.bigStep();
+            this.draw();
+        };
+        CodeApplet.prototype.run = function () {
+            if (!this.state.finished) {
+                this.step();
+                var self_1 = this;
+                this.timeout = setTimeout(function () { self_1.run(); }, codeParams.timeStep);
+            }
+        };
+        CodeApplet.prototype.stop = function () {
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+                delete this.timeout;
+            }
+        };
+        CodeApplet.prototype.draw = function () {
+            this.canvas.height = this.state.displayHeight();
+            this.background();
+            this.state.draw(this.canvas);
+        };
+        return CodeApplet;
+    }(Applet));
+    CodeAppletImpl.CodeApplet = CodeApplet;
+    var Cursor = (function () {
+        function Cursor(ctx, x, y) {
+            this.ctx = ctx;
+            this.prefix = "";
+            this.x = x;
+            this.y = y + codeParams.baseLine;
+        }
+        Cursor.prototype.prefixNextLine = function (prefix) {
+            this.prefix = prefix;
+        };
+        Cursor.prototype.printLine = function (text, depth) {
+            this.ctx.fillText(this.prefix + text, this.x + depth * codeParams.indent, this.y);
+            this.prefix = "";
+            this.y += codeParams.lineSpacing;
+        };
+        return Cursor;
+    }());
+    function cloneVariables(state) {
+        var copy = emptyDictionary();
+        for (var attr in state) {
+            copy[attr] = cloneValue(state[attr]);
+        }
+        return copy;
+    }
+    function cloneValue(obj) {
+        if (null === obj || "object" !== typeof obj)
+            return obj;
+        if (obj instanceof Array) {
+            var copy = [];
+            for (var i in obj)
+                copy[i] = obj[i];
+            return copy;
+        }
+        throw new Error("Unable to copy obj! Its type isn't supported.");
+    }
+})(CodeAppletImpl || (CodeAppletImpl = {}));
+var CodeApplet = CodeAppletImpl.CodeApplet;
+var getProcedure = CodeAppletImpl.getProcedure;
+var leftToRightColour = CodeAppletImpl.leftToRightColour;
