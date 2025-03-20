@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg svg="http://www.w3.org/2000/svg" version="1.0"
+ width="256" height="256" viewBox="0 0 256 256"
+ xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <circle cx="48.205347448683" cy="190.34804301446" r="5" style="fill:#000"/>
+ <circle cx="92.071996548247" cy="46.910118890419" r="5" style="fill:#000"/>
+ <circle cx="39.880319414605" cy="47.000510460232" r="5" style="fill:#f00"/>
+ <circle cx="175.71783759152" cy="218.48194100451" r="5" style="fill:#000"/>
+ <circle cx="155.01651304728" cy="39.732911541002" r="5" style="fill:#000"/>
+ <circle cx="222.2145036581" cy="193.41597298506" r="5" style="fill:#000"/>
+ <circle cx="245.71183818379" cy="121.06788258211" r="5" style="fill:#000"/>
+ <circle cx="142.50974264206" cy="164.310632785" r="5" style="fill:#000"/>
+ <circle cx="221.1757012667" cy="89.593181897697" r="5" style="fill:#000"/>
+ <circle cx="60.885631595219" cy="132.10538042342" r="5" style="fill:#000"/>
+ <circle cx="14.270247487477" cy="198.56022188466" r="5" style="fill:#000"/>
+ <circle cx="70.668216547309" cy="97.731947623068" r="5" style="fill:#000"/>
+ <circle cx="45.19881542176" cy="65.93317008481" r="5" style="fill:#f00"/>
+ <circle cx="194.08966838852" cy="188.77068427241" r="5" style="fill:#000"/>
+ <circle cx="129.82768487643" cy="143.54298510474" r="5" style="fill:#000"/>
+ <circle cx="113.7145687061" cy="168.03303232511" r="5" style="fill:#000"/>
+</svg>

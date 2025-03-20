@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<!-- saved from url=(0089)https://moodle4.city.ac.uk/pluginfile.php/885221/mod_resource/content/15/notes/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script id="f5_cspm">(function(){var f5_cspm={f5_p:'KODHLEKKJHGDBCHLKEKNDKFOCBIIHILLNHLJHNDOMMMEHKMOFAHFCPKAAHBIDFALMPKBDNOLAAJHGBCLPKPAFOOCAAPKILGPLEMGOIAHOAMFKIJLMPBMHAGGGHOKMPMH',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0756688550aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>
+
+<link rel="stylesheet" type="text/css" href="./Recursive algorithms_files/moodle-custom-styles.css">
+<link rel="stylesheet" type="text/css" href="./Recursive algorithms_files/shCore.css">
+<link rel="stylesheet" type="text/css" href="./Recursive algorithms_files/shThemeDefault.css">
+<link rel="stylesheet" type="text/css" href="./Recursive algorithms_files/kube.min.css">
+<link rel="stylesheet" type="text/css" href="./Recursive algorithms_files/master.css">
+<link rel="stylesheet" type="text/css" href="./Recursive algorithms_files/algorithms.css">
+<link href="./Recursive algorithms_files/css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./Recursive algorithms_files/shCore.js.download"></script>
+<script type="text/javascript" src="./Recursive algorithms_files/shBrushJava.js.download"></script>
+<script type="text/javascript" src="./Recursive algorithms_files/applet.js.download"></script>
+<script type="text/javascript" src="./Recursive algorithms_files/codeapplet.js.download"></script>
+
+<title>Recursive algorithms</title>
+</head>
+
+<body style="font-size: 100%; ">
+<div id="page">
+<div class="soiContent">
+
+<div class="units-row">
+<div class="unit-60">
+
+<h1>Recursive algorithms</h1>
+
+<p>
+One strategy for solving problems is:
+</p><ul>
+<li>
+If the problem is too big to solve directly,
+reduce it to smaller problems of the same type,
+and apply the same procedure to those.
+</li></ul>
+<p>
+That is, the algorithm calls itself: it is <em>recursive</em>.
+Such algorithms will be the topic of this session,
+and in week 7 we'll see how this strategy has been used to obtain
+fast sorting algorithms.
+But first we'll review methods.
+
+</p><h2>Understanding method calls</h2>
+
+<p>
+We'll begin with another look at methods,
+which were covered in session 3 of the Java module last term.
+
+</p><h3>Tracing method calls</h3>
+
+<p>
+Consider the following simple algorithms:
+
+</p><div class="pseudocode" id="Square">
+<div class="codeheader">Square(x)</div>
+<pre>RETURN x * x
+</pre>
+</div>
+
+<div class="pseudocode" id="Cube">
+<div class="codeheader">Cube(x)</div>
+<pre>y ← Square(x)
+RETURN y * x
+</pre>
+</div>
+
+<div class="pseudocode" id="FourthPower">
+<div class="codeheader">FourthPower(x)</div>
+<pre>y ← Cube(x)
+RETURN y * x
+</pre>
+</div>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<div class="task">
+<p>
+Try executing FourthPower(2):
+
+<canvas id="fourthPower" width="450" height="130">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</p><p>
+<button onclick="fourthPower.reset()">Reset</button>
+<button onclick="fourthPower.step()">Single step</button>
+<button onclick="fourthPower.bigStep()">Big step</button>
+<button onclick="fourthPower.run()">Run</button>
+<button onclick="fourthPower.stop()">Stop</button>
+
+<script language="JavaScript">
+var fourthPower = new CodeApplet("fourthPower", "FourthPower", {x: 2});
+</script>
+</p></div>
+
+</div>
+
+<div class="unit-40">
+
+<p>
+We can trace the execution of FourthPower,
+using indentation to show method calls:
+
+</p><div class="trace">
+FourthPower(2)
+<ul>
+<li>call Cube(2)
+</li><li>
+<ul>
+<li>call Square(2)
+<ul>
+<li>return 4
+</li></ul>
+</li><li>y ← 4
+</li><li>return 8
+</li></ul>
+</li><li>y ← 8
+</li><li>return 16
+</li></ul>
+</div>
+</div>
+
+</div>
+
+<p>
+Similarly, we can trace the execution of <code>main</code> in the artificial
+Java code at right:
+
+</p><div class="units-row">
+<div class="unit-40">
+
+<div class="trace">
+main
+<ul>
+<li>set a to 3
+</li><li>call <code>f(4)</code>
+<ul>
+<li>print 4
+</li><li>call <code>g(9)</code>
+<ul>
+<li>print 9
+</li><li>return 55
+</li></ul>
+</li><li>set y to 55
+</li><li>print 110
+</li><li>return from <code>f</code>
+</li></ul>
+</li><li>call <code>g(7)</code>
+<ul>
+<li>print 7
+</li><li>return 41
+</li></ul>
+</li><li>print 41
+</li><li>return from <code>main</code>
+</li></ul>
+</div>
+</div>
+
+<div class="unit-60">
+<div><div id="highlighter_95100" class="syntaxhighlighter nogutter shextras java"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="java keyword">public</code> <code class="java keyword">static</code> <code class="java keyword">void</code> <code class="java plain">main(String[] args) {</code></div><div class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">int</code> <code class="java plain">a = </code><code class="java value">3</code><code class="java plain">;</code></div><div class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">f(a+</code><code class="java value">1</code><code class="java plain">);</code></div><div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">a = g(</code><code class="java value">7</code><code class="java plain">);</code></div><div class="line number5 index4 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">System.out.println(a);</code></div><div class="line number6 index5 alt1"><code class="java plain">}</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="java keyword">public</code> <code class="java keyword">static</code> <code class="java keyword">void</code> <code class="java plain">f(</code><code class="java keyword">int</code> <code class="java plain">x) {</code></div><div class="line number9 index8 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">System.out.println(x);</code></div><div class="line number10 index9 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">int</code> <code class="java plain">y = g(x+</code><code class="java value">5</code><code class="java plain">);</code></div><div class="line number11 index10 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">System.out.println(y*</code><code class="java value">2</code><code class="java plain">);</code></div><div class="line number12 index11 alt1"><code class="java plain">}</code></div><div class="line number13 index12 alt2">&nbsp;</div><div class="line number14 index13 alt1"><code class="java keyword">public</code> <code class="java keyword">static</code> <code class="java keyword">int</code> <code class="java plain">g(</code><code class="java keyword">int</code> <code class="java plain">v) {</code></div><div class="line number15 index14 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">System.out.println(v);</code></div><div class="line number16 index15 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java keyword">return</code> <code class="java plain">v*</code><code class="java value">7</code> <code class="java plain">- </code><code class="java value">8</code><code class="java plain">;</code></div><div class="line number17 index16 alt2"><code class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+</div>
+</div>
+
+<h3>Implementation of methods: the stack</h3>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+In the above Java program, <code>main()</code> calls a method
+<code>f()</code>, which calls a method <code>g()</code>.
+During the execution of a method, the runtime system stores
+</p><ul>
+<li>the values of the parameters passed to the method.
+</li><li>the <em>return address</em>:
+the location in the program from which the method was called,
+and to which control will be passed when the method returns.
+</li><li>any local variables defined inside the method.
+</li><li>possible other housekeeping information.
+</li></ul>
+<p>
+This bundle is called an <em>activation record</em> or <em>stack frame</em>.
+There will be one of these for each active method.
+They are held on the <em>stack</em>,
+which grows and shrinks during execution of the program.
+The one at right is shown growing downwards.
+</p><ul>
+<li>
+When a method is called, a new activation record is added to the stack.
+</li><li>
+When the method returns, its activation record is discarded,
+so that the stack shrinks.
+</li></ul>
+
+<div class="aside">
+Objects created with <code>new</code> are stored in a different area,
+called the <em>heap</em>.
+</div>
+</div>
+
+<div class="unit-40">
+<table>
+<tbody><tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">parameters</td>
+<td rowspan="3" style="vertical-align: middle">Activation record for <code>main()</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">local variables</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">parameters</td>
+<td rowspan="3" style="vertical-align: middle">Activation record for <code>f()</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">local variables</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">parameters</td>
+<td rowspan="3" style="vertical-align: middle">Activation record for <code>g()</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">local variables</td>
+</tr>
+<tr>
+<td style="text-align: center; font-size: 150%; padding: 0px;">↓</td>
+<td></td>
+</tr>
+</tbody></table>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h2>Recursion</h2>
+
+<p>
+Recursive algorithms use the general strategy of solving large problems
+by reducing them to smaller ones, and then using the same method on those.
+
+</p><h3>Example: computing powers</h3>
+
+<p>
+We want to compute the function
+x<sup>k</sup> = x * ... * x
+where k x's are multiplied together.
+A simple method relies on these two equations:
+</p><ul>
+<li><span style="font-size: 150%">x<sup>0</sup> = 1</span>
+</li><li><span style="font-size: 150%">x<sup>k</sup> = x * x<sup>k-1</sup></span>, if k &gt; 0
+</li></ul>
+<p>
+We can translate this directly into a recursive algorithm:
+
+</p><div class="pseudocode" id="Power">
+<div class="codeheader">Power(x, k)</div>
+<pre>IF k ≤ 0
+        RETURN 1
+ELSE
+        y ← Power(x, k-1)
+        RETURN x * y
+</pre>
+</div>
+
+<div class="task">
+<p>
+Try executing Power(2, 3):
+
+<canvas id="recursivePower" width="450" height="180">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</p><p>
+<button onclick="recursivePower.reset()">Reset</button>
+<button onclick="recursivePower.step()">Single step</button>
+<button onclick="recursivePower.bigStep()">Big step</button>
+<button onclick="recursivePower.run()">Run</button>
+<button onclick="recursivePower.stop()">Stop</button>
+
+<script language="JavaScript">
+var recursivePower = new CodeApplet("recursivePower", "Power",
+        {x: 2, k: 3});
+</script>
+
+</p></div>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+Here is a trace of a call of Power(2, 5):
+
+</p><div class="trace">
+Power(2, 5)
+<ul>
+<li>call Power(2, 4)
+<ul>
+<li>call Power(2, 3)
+<ul>
+<li>call Power(2, 2)
+<ul>
+<li>call Power(2, 1)
+<ul>
+<li>call Power(2, 0)
+<ul>
+<li>return 1
+</li></ul>
+</li><li>return 2*1 = 2
+</li></ul>
+</li><li>return 2*2 = 4
+</li></ul>
+</li><li>return 2*4 = 8
+</li></ul>
+</li><li>return 2*8 = 16
+</li></ul>
+</li><li>return 2*16 = 32
+</li></ul>
+</div>
+
+<h4>Analysis</h4>
+
+<p>
+We shall use the exponent k as the parameter,
+and count multiplications as our basic step.
+The recursive power algorithm takes:
+</p><ul>
+<li>O(k) time
+</li><li>O(k) space (the amount of stack required at the deepest point)
+</li></ul>
+</div>
+
+<div class="unit-40">
+<p>
+Stack when execution is inside Power(2, 0):
+</p><table>
+<tbody><tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">x: 2, k: 5</td>
+<td rowspan="2" style="vertical-align: middle">Activation record for <code>Power(2, 5)</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">x: 2, k: 4</td>
+<td rowspan="2" style="vertical-align: middle">Activation record for <code>Power(2, 4)</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">x: 2, k: 3</td>
+<td rowspan="2" style="vertical-align: middle">Activation record for <code>Power(2, 3)</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">x: 2, k: 2</td>
+<td rowspan="2" style="vertical-align: middle">Activation record for <code>Power(2, 2)</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">x: 2, k: 1</td>
+<td rowspan="2" style="vertical-align: middle">Activation record for <code>Power(2, 1)</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">return address</td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-top: solid black 3px;">x: 2, k: 0</td>
+<td rowspan="2" style="vertical-align: middle">Activation record for <code>Power(2, 0)</code></td>
+</tr>
+<tr>
+<td style="border: solid black 1px; border-bottom: solid black 3px;">return address</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Recursion and iteration</h3>
+
+<p>
+If the last thing a recursive method does is call itself,
+this call is called <em>tail recursion</em>, and that is equivalent
+to a loop.
+The above definition of Power isn't tail recursive, because it does a
+multiplication after calling itself.
+However we can still transform it into a loop:
+
+</p><div class="pseudocode" id="IterativePower">
+<div class="codeheader">IterativePower(x, k)</div>
+<pre>pow ← 1
+i ← 0
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ i ≤ k and pow = x<sup>i</sup></span>
+<pre>WHILE i &lt; k
+        pow ← pow * x
+        i ← i + 1
+RETURN pow
+</pre>
+</div>
+
+<div class="task">
+<p>
+Try IterativePower(2, 5):
+
+<canvas id="iterativePower" width="450" height="230">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</p><p>
+<button onclick="iterativePower.reset()">Reset</button>
+<button onclick="iterativePower.step()">Single step</button>
+<button onclick="iterativePower.bigStep()">Big step</button>
+<button onclick="iterativePower.run()">Run</button>
+<button onclick="iterativePower.stop()">Stop</button>
+ 
+<script language="JavaScript">
+var iterativePower = new CodeApplet("iterativePower", "IterativePower",
+        {x: 2, k: 5});
+</script>
+
+</p></div>
+
+<h4>Analysis</h4>
+
+<p>
+The iterative power algorithm takes:
+</p><ul>
+<li>O(k) time
+</li><li>O(1) space
+</li></ul>
+
+<p>
+In this case the iterative algorithm is superior because it avoids using
+O(n) stack space.
+However, recursive algorithms may be preferred over iterative versions
+that use the same order of space but are less clear.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>A faster algorithm</h3>
+
+<p>
+We can compute powers more quickly (at the cost of extra space),
+by using these equations:
+</p><ul>
+<li><span style="font-size: 150%">x<sup>0</sup> = 1</span>
+</li><li><span style="font-size: 150%">x<sup>2k</sup> = x<sup>k</sup> * x<sup>k</sup></span>
+</li><li><span style="font-size: 150%">x<sup>2k+1</sup> = x<sup>k</sup> * x<sup>k</sup> * x</span>
+</li></ul>
+
+<p>
+Since the two x<sup>k</sup> expressions have the same value,
+we can compute it once and put it in a variable.
+We arrive at the following implementation:
+
+</p><div class="pseudocode" id="FastPower">
+<div class="codeheader">FastPower(x, k)</div>
+<pre>IF k = 0
+        RETURN 1
+y ← FastPower(x, k DIV 2)
+IF k is even
+        RETURN y*y
+ELSE
+        RETURN y*y*x
+</pre>
+</div>
+
+<div class="task">
+<p>
+Try FastPower with
+x = <input type="text" id="fastPowerBase" size="1" value="2" onchange="fastPower.setVar(&#39;x&#39;, Number(this.value))">
+and
+k = <input type="text" id="fastPowerExponent" size="1" value="13" onchange="fastPower.setVar(&#39;k&#39;, Number(this.value))">:
+
+<canvas id="fastPower" width="450" height="210">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</p><p>
+<button onclick="fastPower.reset()">Reset</button>
+<button onclick="fastPower.step()">Single step</button>
+<button onclick="fastPower.bigStep()">Big step</button>
+<button onclick="fastPower.run()">Run</button>
+<button onclick="fastPower.stop()">Stop</button>
+
+<script language="JavaScript">
+var fastPower = new CodeApplet("fastPower", "FastPower",
+        {x: Number(document.getElementById('fastPowerBase').value),
+	 k: Number(document.getElementById('fastPowerExponent').value)});
+</script>
+
+</p></div>
+
+<p>
+Here is a trace of the execution of FastPower(2, 13):
+
+</p><div class="trace">
+FastPower(2, 13)
+<ul>
+<li>call FastPower(2, 6)
+<ul>
+<li>call FastPower(2, 3)
+<ul>
+<li>call FastPower(2, 1)
+<ul>
+<li>call FastPower(2, 0)
+<ul>
+<li>return 1
+</li></ul>
+</li><li>y ← 1
+</li><li>return 1*1*2 = 2
+</li></ul>
+</li><li>y ← 2
+</li><li>return 2*2*2 = 8
+</li></ul>
+</li><li>y ← 8
+</li><li>return 8*8 = 64
+</li></ul>
+</li><li>y ← 64
+</li><li>return 64*64*2 = 8192
+</li></ul>
+</div>
+
+<p>
+At each call, this algorithm halves k.
+Thus it makes O(log k) nested calls, and takes O(log k) time and O(log k) space.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h2>Divide-and-conquer strategy</h2>
+
+<p>
+A particularly powerful strategy that can be naturally expressed
+recursively is <em>divide-and-conquer</em>:
+</p><ul>
+<li>If the input is small, compute the answer using a direct method.
+</li><li>Otherwise:
+<ul>
+<li>Split the problem into smaller subproblems
+</li><li>Solve each subproblem recursively
+</li><li>Combine the solutions
+</li></ul>
+</li></ul>
+
+<p>
+This strategy leads to efficient sorting algorithms, as we'll see in week 7.
+
+</p><h3>Example: closest pair problem</h3>
+
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+Given n points in 2-dimensional space (described by their coordinates),
+we want to find the two that are closest to each other.
+The naive approach to loop over the points,
+and for each point loop over all the others calculating the distance
+between the two:
+
+</p><div class="pseudocode" id="SimpleClosestPoints">
+<div class="codeheader">SimpleClosestPoints(P)</div>
+<pre>best ← something huge
+FOR p in P
+        FOR q in P - p
+                IF dist(p, q) &lt; best
+                        first ← p
+                        second ← q
+                        best ← dist(p, q)
+RETURN (p, q, best)
+</pre>
+</div>
+<p>
+These nested loops will take O(n<sup>2</sup>) time.
+
+</p></div>
+<div class="unit-40">
+<img width="75%" src="./Recursive algorithms_files/Closest_pair_of_points.svg">
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Divide-and-conquer algorithm</h3>
+<p>
+The following is a sketch of a faster divide-and-conquer algorithm.
+
+</p><div class="pseudocode" id="FastClosestPoints">
+<div class="codeheader">FastClosestPoints(P)</div>
+<pre>IF P is small
+        RETURN SimpleClosestPoints(P)
+m ← x-coordinate dividing P in half
+d<sub>l</sub> ← FastClosestPoints(left half of P)
+d<sub>r</sub> ← FastClosestPoints(right half of P)
+d ← smaller of d<sub>l</sub> and d<sub>r</sub>
+check whether the middle strip has two points from opposite halves
+that are closer than d
+RETURN closest distance
+</pre>
+</div>
+<p>
+With the appropriate representation, the amount of extra work in each
+call is proportional to the size of P.
+From that it can be shown that the total time is O(n log n).
+Because each subcall takes half as many points,
+the maximum depth of recursion of O(log n),
+so the space usage is O(log n).
+
+</p><div class="aside">
+The calculation of the O(n log n) cost is similar to the analysis of
+the fast sorting algorithms we'll cover in week 7.
+</div>
+
+</div>
+<div class="unit-40">
+<img src="./Recursive algorithms_files/FastCP.png">
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h2>Excessive recursion</h2>
+
+<p>
+Recursion can be an elegant way of expressing a solution,
+but it is easy to misuse it and get an exponential blowup.
+
+</p></div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<h3>Example: naive Fibonacci function</h3>
+
+<p>
+Consider the problem of finding the nth term in the Fibonacci sequence
+
+</p><center>
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...
+</center>
+
+<p>
+where each term is the sum of the two before it, i.e.
+</p><ul>
+<li>F<sub>0</sub> = 0
+</li><li>F<sub>1</sub> = 1
+</li><li>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>, for n &gt; 1
+</li></ul>
+<p>
+This translates directly into a recursive function:
+
+</p><div class="pseudocode" id="Fibonacci">
+<div class="codeheader">Fibonacci(n)</div>
+<pre>IF n = 0
+        RETURN 0
+IF n = 1
+        RETURN 1
+RETURN Fibonacci(n-1) + Fibonacci(n-2)
+</pre>
+</div>
+</div>
+
+<div class="unit-40">
+<center>
+<img width="60%" src="./Recursive algorithms_files/Fibonacci.jpg">
+<p>
+Leonardo Fibonacci (c. 1200 AD)
+</p></center>
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+<p>
+If we trace Fibonacci(4), we see wasteful recalculation:
+
+</p><div class="trace">
+Fibonacci(4)
+<ul>
+<li>call Fibonacci(3)
+<ul>
+<li>call Fibonacci(2)
+<ul>
+<li>call Fibonacci(1)
+<ul>
+<li>return 1
+</li></ul>
+</li><li>call Fibonacci(0)
+<ul>
+<li>return 0
+</li></ul>
+</li><li>return 1
+</li></ul>
+</li><li>call Fibonacci(1)
+<ul>
+<li>return 1
+</li></ul>
+</li><li>return 1+1 = 2
+</li></ul>
+</li><li>call Fibonacci(2)
+<ul>
+<li>call Fibonacci(1)
+<ul>
+<li>return 1
+</li></ul>
+</li><li>call Fibonacci(0)
+<ul>
+<li>return 0
+</li></ul>
+</li><li>return 1+0 = 1
+</li></ul>
+</li><li>return 2+1 = 3
+</li></ul>
+</div>
+
+<p>
+In fact this function takes time O(F<sub>n</sub>),
+which grows exponentially.
+
+</p></div>
+
+<div class="unit-40">
+<img src="./Recursive algorithms_files/fibonacci.svg">
+<center>
+<p>Cost of the simple Fibonacci algorithm
+</p></center>
+</div>
+</div>
+
+<div class="units-row">
+<div class="unit-60">
+
+<p>
+We can fix this by working up from small values to large ones:
+
+</p><div class="pseudocode" id="FasterFibonacci">
+<div class="codeheader">FasterFibonacci(n)</div>
+<pre>IF n = 0
+        RETURN 0
+k ← 1
+prev ← 0
+x ← 1
+</pre>
+<span class="invariant"><b>invariant:</b> 0 ≤ k ≤ n and x = F<sub>k</sub> and prev = F<sub>k-1</sub></span>
+<pre>WHILE k &lt; n
+        next ← x + prev
+        prev ← x
+        x ← next
+        k ← k + 1
+RETURN x
+</pre>
+</div>
+<p>
+It is obvious from the loop that this version takes time O(n).
+
+</p><div class="task">
+<p>
+Try the faster Fibonacci algorithm:
+
+<canvas id="fasterFibonacci" width="450" height="290">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</p><p>
+<button onclick="fasterFibonacci.reset()">Reset</button>
+<button onclick="fasterFibonacci.step()">Single step</button>
+<button onclick="fasterFibonacci.bigStep()">Big step</button>
+<button onclick="fasterFibonacci.run()">Run</button>
+<button onclick="fasterFibonacci.stop()">Stop</button>
+ 
+<script language="JavaScript">
+var fasterFibonacci = new CodeApplet("fasterFibonacci", "FasterFibonacci",
+        {n: 5});
+</script>
+
+</p></div>
+
+</div>
+
+<div class="unit-40">
+
+<div class="aside">
+The general strategy solving for small values first and remembering
+the answers so we don't need to recompute them is known as <em>dynamic
+programming</em>, and leads to efficient algorithms for many problems.
+</div>
+
+</div>
+</div>
+
+<hr noshade="" size="1">
+
+</div>  <!-- End of soiContent -->
+</div> <!-- end of page -->
+
+<script type="text/javascript">SyntaxHighlighter.all()</script>
+
+
+
+</body></html>

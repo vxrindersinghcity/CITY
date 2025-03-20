@@ -61,9 +61,8 @@ public class iTest {
 
             // Test methods that require ordered inputs on the test data
 
-            sa.countUnique(arr);
 
-            System.out.println(); // Print a blank line for readability
+            System.out.println(Arrays.toString(sa.topKFrequent(arr,3))); // Print a blank line for readability
         }
     }
 }
