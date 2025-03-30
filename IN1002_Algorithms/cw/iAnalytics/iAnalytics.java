@@ -141,16 +141,78 @@ public class iAnalytics {
     }
 
     // Task 6: Longest contiguous subarray in ascending order
+    //O(n) as going to add to array one by one
     public int[] longestAscSubarray(int[] arr) {
-        // replace the following line with your implementation
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // Handle the case of an empty array
+        if (arr == null || arr.length == 0) {
+            return new int[0];
+        }
+
+        int maxStart = 0;  // Start index of the longest subarray
+        int maxLength = 1; // Length of the longest subarray
+        int currentStart = 0;  // Start index of the current subarray
+        int currentLength = 1; // Length of the current subarray
+
+        // Iterate through the array to identify ascending subarrays
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > arr[i - 1]) {
+                currentLength++;
+            } else {
+                // Check if the current subarray is the longest
+                if (currentLength > maxLength) {
+                    maxLength = currentLength;
+                    maxStart = currentStart;
+                }
+                // Reset for the next ascending subarray
+                currentStart = i;
+                currentLength = 1;
+            }
+        }
+
+        // Final check for the last ascending subarray
+        if (currentLength > maxLength) {
+            maxLength = currentLength;
+            maxStart = currentStart;
+        }
+
+        int[] result = new int[maxLength];
+        for (int i = 0; i < maxLength; i++) {
+            result[i] = arr[maxStart + i];
+        }
+
+        return result;
+
     }
 
 
     // Task 7: Maximum sum of a contiguous subarray with exactly k elements
+    //O(n^2) as nested llopps ar being used
     public int maxSubarraySum(int[] arr, int k) {
-        // replace the following line with your implementation
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        // If the array has fewer than k elements, sum the entire array
+        if (arr.length < k) {
+            int totalSum = 0;
+            for (int num : arr) {
+                totalSum += num;
+            }
+            return totalSum;
+        }
+
+        int currentSum = 0, maxSum = 0;
+
+        // Slide the window across the array
+        for (int i = k - 1; i < arr.length; i++) {
+            currentSum = 0;
+            for (int j = i - k + 1; j <= i; j++) {
+                currentSum += arr[j];
+            }
+            maxSum = Math.max(maxSum, currentSum); // Update the maximum sum
+        }
+
+        return maxSum;
+
     }
 
 

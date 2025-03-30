@@ -60,9 +60,6 @@ public class iTest {
             Arrays.sort(arr);
 
             // Test methods that require ordered inputs on the test data
-
-
-            System.out.println(Arrays.toString(sa.topKFrequent(arr,3))); // Print a blank line for readability
         }
     }
 }
