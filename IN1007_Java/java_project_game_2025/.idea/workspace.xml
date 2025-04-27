@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dedaa167-8903-461d-978f-4067e98ccdc6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TERM2/week5/java_project/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/coder_info.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/Eagle/eagleLeft.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/Eagle/eagleRight.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/Oposum/oposumLeft.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/Oposum/oposumRight.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/Wolf/WolfLeft.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/Wolf/WolfRight.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/Enemies/enemydeath/Preview.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/idle.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/idleLeft.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/jump.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/jumpLeft.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/ledge grab outline.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/run.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/Character/runLeft.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/junglefloor.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/bg2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/plx-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/plx-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/plx-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/plx-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/plx-5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/parallax background/redbg.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/JunglePack/portal.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/attacks/fireball.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/attacks/windattack.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/collectables/coin.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/collectables/healer.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/collectables/key.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/menuItems/backbutton.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/menuItems/wallpaper.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/music/effects/attacks/fireballsound.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/music/effects/attacks/wind.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/music/effects/collectables/coincollectsound.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/data/music/menu/bgsound.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/java_project.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Attack/Attack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Attack/FireBall.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Attack/WindAttack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Collectables/Credit.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Collectables/healer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/ENEMY/EnemyBlueprint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/ENEMY/OpossumEnemy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/ENEMY/WolfEnemy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/ENEMY/eagle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/PLAYER/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/PLAYER/PlayerController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/PLAYER/PlayerMouseAttack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/PLAYER/playerCollisions.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Platform.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Entity/Portal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Menus/GameWonmenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Menus/GameoverMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Menus/MainMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/Menus/SettingsMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/Game.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/GameView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/GiveFocus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/Tracker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/levels/GameLevel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/levels/Level1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/levels/Level2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/levels/Level3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TERM2/week5/java_project/src/game/levels/LevelInfoBox.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;vxrindersinghcity&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/vxrindersinghcity/CITY.git&quot;,
+    &quot;accountId&quot;: &quot;70ebd41c-49a9-41ee-a38f-d3c584acbd05&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2wKIhMWSZOtOTdJh6uLICCFMq1A" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/VXRSINGH/Documents/GITHUB/CITY/IN1007_Java/java_project_game_2025&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Global Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\VXRSINGH\Documents\GITHUB\CITY\IN1007_Java\TERM2\week5\java_project" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dedaa167-8903-461d-978f-4067e98ccdc6" name="Changes" comment="" />
+      <created>1745783958652</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745783958652</updated>
+      <workItem from="1745783959574" duration="155000" />
+      <workItem from="1745784906186" duration="232000" />
+      <workItem from="1745785266042" duration="20000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
